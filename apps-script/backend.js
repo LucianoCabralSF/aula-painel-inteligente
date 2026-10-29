@@ -1,10 +1,10 @@
 // Backend da aula "Painel Inteligente": registra o progresso de cada aluno
 // na aba "Registro do Desafio" da planilha da turma (uma linha por aluno).
 var ABA = 'Registro do Desafio';
-var CAB = ['Aluno', 'Painel escolhido', 'Entrou em', 'Missão (passos feitos)', 'Missão concluída', 'Quiz (acertos de 5)', 'Missão + quiz concluídos', 'Última atividade', 'Faça sozinho (acertos de 5)'];
+var CAB = ['Aluno', 'Painel escolhido', 'Entrou em', 'Missão (passos feitos)', 'Missão concluída', 'Quiz (acertos de 5)', 'Missão + quiz concluídos', 'Última atividade', 'Faça sozinho (células certas de 20)'];
 var TOTAL_QUIZ = 5;
 var TOTAL_MISSAO = 12; // passos da missão de cada aluno no site
-var TOTAL_DESAFIO = 5; // perguntas do "Faça sozinho"
+var TOTAL_DESAFIO = 20; // células da tabela do "Faça sozinho"
 
 function inteiro(v, min, max) {
   return typeof v === 'number' && Math.floor(v) === v && v >= min && v <= max;

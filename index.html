@@ -150,8 +150,6 @@ body{margin:0}
 .gate .btn{font-size:1.05rem;padding:12px;background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
 .gate .err{color:var(--bad);font-weight:600;min-height:1.4em}
 @media (max-width:640px){.fxlabel{display:none}}
-table.blank td.num{color:var(--gold);font:700 1rem var(--mono)}
-table.blank tr.tot td{font-weight:700;background:var(--cell)}
 .hints{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .hint-col{display:flex;flex-direction:column;gap:8px;padding:16px}
 .hint-col>b{font-family:var(--display);color:var(--navy);font-size:1.05rem}
@@ -159,13 +157,28 @@ details{border-top:1px solid var(--line);padding-top:6px}
 summary{cursor:pointer;font-weight:700;color:var(--gold);font-size:.9rem}
 details p{margin-top:6px;font-size:.95rem}
 details code{font-size:.8rem;word-break:break-all}
-.checker{display:grid;grid-template-columns:1fr auto;gap:12px 16px;align-items:center}
-.checker .ans{display:flex;align-items:center;gap:10px}
-.checker input{font:700 1rem var(--mono);width:150px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg)}
-.checker input.right{border-color:var(--live)} .checker input.wrong{border-color:var(--bad)}
-.checker .ans span{font-weight:700;min-width:1.5em}
-.checker .btn,.checker .score,.checker .sync{grid-column:1/-1}
-@media (max-width:640px){.checker{grid-template-columns:1fr}.checker .ans{margin-bottom:6px}}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.mini-bar{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:0}
+.mini-addr{font:700 .9rem var(--mono);color:var(--navy);padding:10px 12px;border-right:1px solid var(--line);min-width:64px;text-align:center}
+.mini-fx{font:700 .9rem var(--mono);font-style:italic;color:var(--muted);padding:10px;border-right:1px solid var(--line)}
+.mini-raw{font:500 .92rem var(--mono);padding:10px 12px;white-space:nowrap;overflow-x:auto;min-width:0;flex:1;color:var(--fg)}
+.mini-tools{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--cell)}
+.mini-tools .btn{font-size:.85rem;padding:6px 10px}
+.mini-msg{margin:0;padding:0 12px;font-size:.9rem;font-weight:600;color:var(--bad);max-width:none}
+.mini-msg:not(:empty){padding:8px 12px;background:var(--badsoft)}
+.mini-grid{overflow-x:auto}
+#grid{border-collapse:collapse;width:100%;min-width:640px}
+#grid th,#grid td{border:1px solid var(--line);padding:0;height:38px;font-size:.92rem}
+#grid th{background:var(--cell);color:var(--muted);font:700 .78rem var(--mono);text-align:center;letter-spacing:0;text-transform:none;position:static;width:44px}
+#grid td.fix{padding:0 10px;font-weight:700;color:var(--navy);background:var(--card)}
+#grid tr.head td.fix{background:var(--cell);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;color:var(--muted)}
+#grid tr.tot td{border-top:2px solid var(--navy)}
+#grid input{width:100%;height:100%;min-width:120px;border:0;background:var(--goldsoft);color:var(--fg);font:500 .92rem var(--mono);padding:0 10px;text-align:right;outline:none}
+#grid input:focus{text-align:left;background:var(--card);box-shadow:inset 0 0 0 2px var(--p1)}
+#grid input.err{color:var(--bad);font-weight:700}
+#grid input.right{background:var(--livesoft);box-shadow:inset 0 0 0 2px var(--live)}
+#grid input.wrong{background:var(--badsoft);box-shadow:inset 0 0 0 2px var(--bad)}
+#grid input.sel{box-shadow:inset 0 0 0 2px var(--p1)}
 @media (max-width:860px){.demo,.explorer{grid-template-columns:1fr}.rules{grid-template-columns:1fr 1fr}.targets{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.rules{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
@@ -303,26 +316,30 @@ details code{font-size:.8rem;word-break:break-all}
 
 <section id="sozinho">
   <span class="addr">A8 · FAÇA SOZINHO</span>
-  <h2>Desafio: uma tabela nova, sem copiar nada</h2>
-  <p>Até agora você copiou fórmulas prontas. Agora é com você. No <b>seu</b> painel, deixe duas linhas em branco abaixo da sua tabela e monte esta tabela nova, <b>Vendas por Canal</b>:</p>
-  <div class="card" style="padding:0;overflow-x:auto"><table class="blank">
-    <thead><tr><th>Canal de venda</th><th class="num">Pedidos</th><th class="num">Faturamento</th><th class="num">Lucro bruto</th><th class="num">Margem</th></tr></thead>
-    <tbody>
-      <tr><td>E-commerce</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
-      <tr><td>Marketplace</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
-      <tr><td>Loja Física</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
-      <tr><td>WhatsApp</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
-      <tr class="tot"><td>Total</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
-    </tbody>
-  </table></div>
-  <div class="note"><b>Regras do desafio:</b> nada de copiar e colar fórmula. Escreva cada fórmula com o que você aprendeu hoje: <code>CONT.SE</code>, <code>SOMASE</code>, <code>SEERRO</code>, <code>SOMA</code> e o cifrão <code>$</code>. Escreva a fórmula só na primeira linha e arraste para as outras. Digite os nomes dos canais exatamente como estão na base, sem espaço sobrando no final.</div>
+  <h2>Desafio: monte a tabela com as suas fórmulas</h2>
+  <p>Agora é com você, e aqui mesmo no site. Abaixo tem uma planilha de treino ligada à mesma <b>base de dados</b> dos 30 pedidos. Preencha a tabela <b>Vendas por Canal</b> escrevendo as fórmulas nas células amarelas.</p>
+  <div class="note"><b>Como funciona:</b> clique numa célula amarela, escreva a fórmula começando com <code>=</code> e aperte <kbd>Enter</kbd>. Escreva só na primeira linha de cada coluna e use o botão <b>Arrastar ↓</b>, como na planilha de verdade. Vale tudo o que você aprendeu hoje: <code>CONT.SE</code>, <code>SOMASE</code>, <code>SEERRO</code>, <code>SOMA</code> e o <code>$</code>. Número digitado à mão não vale ponto.</div>
+
+  <div class="mini">
+    <div class="mini-bar"><span class="mini-addr" id="gAddr">B21</span><span class="mini-fx">fx</span><span class="mini-raw" id="gBar"></span></div>
+    <div class="mini-tools">
+      <button class="btn" type="button" id="gDown">Arrastar ↓ até a linha 24</button>
+      <button class="btn" type="button" id="gRight">Arrastar → até a coluna D</button>
+      <button class="btn" type="button" id="gClear">Apagar célula</button>
+    </div>
+    <p class="mini-msg" id="gCellMsg"></p>
+    <div class="mini-grid"><table id="grid"></table></div>
+  </div>
+  <div class="row" style="align-items:center"><button class="btn on" type="button" id="gCheck">Conferir minha tabela</button><span class="score" id="gScore"></span></div>
+  <div id="gMsg"></div>
+  <p class="sync" id="syncD"></p>
 
   <h3>Travou? Abra uma dica de cada vez</h3>
   <div class="hints">
     <div class="card hint-col"><b>Pedidos</b>
       <details><summary>Dica 1</summary><p>Você quer <b>contar</b> só os pedidos de um canal. Qual fórmula conta com condição?</p></details>
       <details><summary>Dica 2</summary><p>É o <code>CONT.SE</code>. Na base de dados, os canais estão na <b>coluna E</b>.</p></details>
-      <details><summary>Dica 3</summary><p><code>=CONT.SE('base de dados'!$E$2:$E$31;___)</code><br>No lugar do ___, clique na célula com o nome do canal.</p></details>
+      <details><summary>Dica 3</summary><p><code>=CONT.SE('base de dados'!$E$2:$E$31;___)</code><br>No lugar do ___, escreva a célula com o nome do canal (A21).</p></details>
     </div>
     <div class="card hint-col"><b>Faturamento</b>
       <details><summary>Dica 1</summary><p>Você quer <b>somar</b> só o que é de um canal. Qual fórmula soma com condição?</p></details>
@@ -335,25 +352,14 @@ details code{font-size:.8rem;word-break:break-all}
     </div>
     <div class="card hint-col"><b>Margem</b>
       <details><summary>Dica 1</summary><p>Margem é o lucro dividido pelo faturamento <b>da mesma linha</b>.</p></details>
-      <details><summary>Dica 2</summary><p>Proteja a divisão para não aparecer <b>#DIV/0!</b>: <code>=SEERRO(___/___;0)</code>. Depois clique no botão <b>%</b>.</p></details>
+      <details><summary>Dica 2</summary><p>Proteja a divisão para não aparecer <b>#DIV/0!</b>: <code>=SEERRO(___/___;0)</code>.</p></details>
     </div>
     <div class="card hint-col"><b>Total</b>
-      <details><summary>Dica 1</summary><p>Pedidos, faturamento e lucro do total: some as 4 linhas de cima com <code>SOMA</code>.</p></details>
+      <details><summary>Dica 1</summary><p>Pedidos, faturamento e lucro do total: some as 4 linhas de cima com <code>SOMA</code>. Depois use <b>Arrastar →</b>.</p></details>
       <details><summary>Dica 2</summary><p>A margem do total <b>não</b> é soma. Faça lucro total dividido pelo faturamento total, com <code>SEERRO</code>.</p></details>
     </div>
   </div>
-
-  <h3>Confira: digite o que apareceu no seu painel</h3>
-  <form class="card checker" id="d2Form" novalidate>
-    <label for="d2a">Quantos pedidos vieram pelo <b>WhatsApp</b>?</label><div class="ans"><input id="d2a" inputmode="decimal" autocomplete="off"><span id="d2aR"></span></div>
-    <label for="d2b">Qual o faturamento da <b>Loja Física</b>?</label><div class="ans"><input id="d2b" inputmode="decimal" autocomplete="off"><span id="d2bR"></span></div>
-    <label for="d2c">Qual o lucro bruto do <b>E-commerce</b>?</label><div class="ans"><input id="d2c" inputmode="decimal" autocomplete="off"><span id="d2cR"></span></div>
-    <label for="d2d">Qual a margem do <b>Marketplace</b>? (em %)</label><div class="ans"><input id="d2d" inputmode="decimal" autocomplete="off"><span id="d2dR"></span></div>
-    <label for="d2e">Qual o lucro bruto da linha <b>Total</b>?</label><div class="ans"><input id="d2e" inputmode="decimal" autocomplete="off"><span id="d2eR"></span></div>
-    <button class="btn on" type="submit">Conferir minhas respostas</button>
-    <p class="score" id="d2Score"></p>
-    <p class="sync" id="syncD"></p>
-  </form>
+  <p class="hint">Terminou? Se quiser, monte a mesma tabela no seu painel da planilha, embaixo da sua tabela. As fórmulas são iguais.</p>
 </section>
 
 <section id="quiz">
@@ -534,21 +540,242 @@ Q.forEach(function(q,qi){var d=document.createElement('div');d.className='card q
     });o.appendChild(b)});
   qb.appendChild(d)});
 
-// A8 desafio: confere os números que o aluno achou no próprio painel (base original, sem as mudanças da A2)
-function orig(canal,campo){var s=0;RAW.forEach(function(r){if(r[3]!==canal)return;var f=r[4]*r[6],c=r[4]*r[5];s+=campo==='n'?1:campo==='fat'?f:f-c});return s}
-var lucroTotal=RAW.reduce(function(s,r){return s+r[4]*(r[6]-r[5])},0);
-var D2=[['d2a',orig('WhatsApp','n'),'n'],['d2b',orig('Loja Física','fat'),'n'],['d2c',orig('E-commerce','luc'),'n'],['d2d',orig('Marketplace','luc')/orig('Marketplace','fat')*100,'%'],['d2e',lucroTotal,'n']];
-function lerNumero(s){s=String(s).replace(/R\$|%|\s/g,'');if(!s)return NaN;s=s.replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');return parseFloat(s)}
-var d2Melhor=-1;
-$('d2Form').addEventListener('submit',function(e){
-  e.preventDefault();var c=0,vazio=0;
-  D2.forEach(function(q){var inp=$(q[0]),v=lerNumero(inp.value),ok;
-    if(isNaN(v)){vazio++;inp.className='';$(q[0]+'R').textContent='';return}
-    if(q[2]==='%'){if(v<=1)v=v*100;ok=Math.abs(v-q[1])<0.15}else ok=Math.abs(v-q[1])<1;
-    inp.className=ok?'right':'wrong';$(q[0]+'R').textContent=ok?'✓':'✗';$(q[0]+'R').style.color=ok?'var(--live)':'var(--bad)';if(ok)c++});
-  $('d2Score').textContent=vazio?'Preencha as 5 respostas para conferir.':c===5?'5 de 5! Sua tabela está certa. Você fez sozinho.':c+' de 5 certas. Volte no painel, confira a fórmula das que deram ✗ e tente de novo.';
-  if(!vazio&&c>d2Melhor){d2Melhor=c;enviar({desafioAcertos:c},$('syncD'))}
+// A8 desafio: planilha de treino com fórmulas de verdade, ligada à base original (sem as mudanças da A2)
+var GFIX={A20:'Canal de venda',B20:'Pedidos',C20:'Faturamento',D20:'Lucro bruto',E20:'Margem',A21:'E-commerce',A22:'Marketplace',A23:'Loja Física',A24:'WhatsApp',A25:'Total'};
+var GCOLS=['B','C','D','E'],GEDIT=[];
+GCOLS.forEach(function(c){for(var r=21;r<=25;r++)GEDIT.push(c+r)});
+var G={},gSel='B21',gCache={},gMsgs={},gStack={};
+try{G=JSON.parse(localStorage.getItem('pi-grade')||'{}')}catch(e){G={}}
+function gSave(){try{localStorage.setItem('pi-grade',JSON.stringify(G))}catch(e){}}
+function colNum(s){var n=0;for(var i=0;i<s.length;i++)n=n*26+s.charCodeAt(i)-64;return n}
+function colStr(n){var s='';while(n>0){var m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s}
+function Err(code,msg){return {err:code,msg:msg}}
+function isErr(v){return v&&typeof v==='object'&&v.err}
+function Falha(msg){var e=new Error(msg);e.formula=true;return e}
+
+// células da aba 'base de dados' (linha 1 = cabeçalho, 2 a 31 = pedidos)
+function baseCell(c,r){
+  if(r<2||r>31)return '';
+  var x=RAW[r-2],q=x[4];
+  switch(c){case 1:return x[0];case 3:return x[2];case 4:return x[1];case 5:return x[3];case 6:return q;case 7:return x[5];case 8:return x[6];
+    case 9:return q*x[5];case 10:return q*x[6];case 11:return q*(x[6]-x[5]);case 12:return (x[6]-x[5])/x[6];default:return ''}
+}
+function localCell(ref){
+  if(GFIX[ref]!==undefined)return GFIX[ref];
+  if(GEDIT.indexOf(ref)>-1)return gVal(ref);
+  return '';
+}
+function cellAt(sheet,c,r){
+  if(!sheet)return localCell(colStr(c)+r);
+  if(sheet.trim().toLowerCase()==='base de dados')return baseCell(c,r);
+  return Err('#REF!','Não existe a aba "'+sheet+'". O nome certo é \'base de dados\'.');
+}
+function parseRef(sheet,txt){
+  var p=txt.replace(/\$/g,'').split(':'),a=/^([A-Z]+)(\d+)$/.exec(p[0]),b=/^([A-Z]+)(\d+)$/.exec(p[1]||p[0]);
+  return {range:true,sheet:sheet,c1:colNum(a[1]),r1:+a[2],c2:colNum(b[1]),r2:+b[2]};
+}
+function rangeVals(rg){var out=[];for(var r=rg.r1;r<=rg.r2;r++)for(var c=rg.c1;c<=rg.c2;c++)out.push(cellAt(rg.sheet,c,r));return out}
+function scalar(v){
+  if(v&&v.range){if(v.r1===v.r2&&v.c1===v.c2)return cellAt(v.sheet,v.c1,v.r1);return Err('#VALOR!','Aqui precisava de uma célula só, mas veio um intervalo inteiro.')}
+  return v;
+}
+function num(v){v=scalar(v);if(isErr(v))return v;if(v==='')return 0;if(typeof v==='number')return v;return Err('#VALOR!','Não dá para fazer conta com o texto "'+v+'".')}
+function tokenize(s){
+  var t=[],i=0,m;
+  while(i<s.length){
+    var ch=s[i],rest=s.slice(i);
+    if(/\s/.test(ch)){i++;continue}
+    if(ch==='"'){var j=s.indexOf('"',i+1);if(j<0)throw Falha('Faltou fechar as aspas ".');t.push({t:'str',v:s.slice(i+1,j)});i=j+1;continue}
+    if(ch==="'"){
+      var k=s.indexOf("'",i+1);if(k<0)throw Falha("Faltou fechar a aspa simples ' do nome da aba.");
+      var nome=s.slice(i+1,k);i=k+1;
+      if(s[i]!=='!')throw Falha("Depois do nome da aba vem o ponto de exclamação: 'base de dados'!");
+      i++;m=/^\$?[A-Za-z]{1,2}\$?\d+(:\$?[A-Za-z]{1,2}\$?\d+)?/.exec(s.slice(i));
+      if(!m)throw Falha('Depois do ! vem o endereço das células, por exemplo E2:E31.');
+      t.push({t:'ref',sheet:nome,v:m[0].toUpperCase()});i+=m[0].length;continue}
+    if((m=/^\$?[A-Za-z]{1,2}\$?\d+(:\$?[A-Za-z]{1,2}\$?\d+)?(?![A-Za-z0-9_.(])/.exec(rest))){t.push({t:'ref',sheet:'',v:m[0].toUpperCase()});i+=m[0].length;continue}
+    if((m=/^\d+(,\d+)?/.exec(rest))){t.push({t:'num',v:parseFloat(m[0].replace(',','.'))});i+=m[0].length;continue}
+    if((m=/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9.]*/.exec(rest))){t.push({t:'name',v:m[0].toUpperCase()});i+=m[0].length;continue}
+    if('+-*/();%:'.indexOf(ch)>-1){t.push({t:'op',v:ch});i++;continue}
+    if(ch===',')throw Falha('Use ponto e vírgula ( ; ) para separar as partes da fórmula, e não vírgula.');
+    throw Falha('Não entendi o sinal '+ch+' na fórmula.');
+  }
+  return t;
+}
+var ALIAS={SUM:'SOMA',COUNTA:'CONT.VALORES',COUNTIF:'CONT.SE',SUMIF:'SOMASE',IFERROR:'SEERRO',AVERAGE:'MÉDIA',MEDIA:'MÉDIA',MAX:'MÁXIMO',MAXIMO:'MÁXIMO',MIN:'MÍNIMO',MINIMO:'MÍNIMO'};
+function igual(a,b){if(typeof a==='number'||typeof b==='number')return +a===+b&&a!==''&&b!=='';return String(a).toLowerCase()===String(b).toLowerCase()}
+function chamar(nome,args){
+  nome=ALIAS[nome]||nome;
+  var vals=function(){var o=[];args.forEach(function(a){if(a&&a.range)o=o.concat(rangeVals(a));else o.push(a)});return o};
+  var nums=function(){var o=[],v=vals();for(var i=0;i<v.length;i++){if(isErr(v[i]))return v[i];if(typeof v[i]==='number')o.push(v[i])}return o};
+  switch(nome){
+    case 'SOMA':var n=nums();if(isErr(n))return n;return n.reduce(function(s,x){return s+x},0);
+    case 'MÉDIA':var a=nums();if(isErr(a))return a;return a.length?a.reduce(function(s,x){return s+x},0)/a.length:Err('#DIV/0!','Não há números para tirar a média.');
+    case 'MÁXIMO':var mx=nums();if(isErr(mx))return mx;return mx.length?Math.max.apply(null,mx):0;
+    case 'MÍNIMO':var mn=nums();if(isErr(mn))return mn;return mn.length?Math.min.apply(null,mn):0;
+    case 'CONT.VALORES':return vals().filter(function(v){return v!==''}).length;
+    case 'CONT.SE':
+      if(args.length!==2)throw Falha('O CONT.SE tem 2 partes: onde procurar ; o que procurar.');
+      if(!args[0]||!args[0].range)throw Falha('A primeira parte do CONT.SE precisa ser um intervalo, por exemplo \'base de dados\'!$E$2:$E$31.');
+      var crit=scalar(args[1]);if(isErr(crit))return crit;
+      return rangeVals(args[0]).filter(function(v){return igual(v,crit)}).length;
+    case 'SOMASE':
+      if(args.length<2||args.length>3)throw Falha('O SOMASE tem 3 partes: onde procurar ; o que procurar ; o que somar.');
+      if(!args[0]||!args[0].range)throw Falha('A primeira parte do SOMASE precisa ser um intervalo (onde procurar).');
+      var cr=scalar(args[1]);if(isErr(cr))return cr;
+      var alvo=args[2]||args[0];if(!alvo.range)throw Falha('A terceira parte do SOMASE precisa ser um intervalo (o que somar).');
+      var s=0,rg=args[0];
+      for(var r=rg.r1;r<=rg.r2;r++)for(var c=rg.c1;c<=rg.c2;c++){
+        if(!igual(cellAt(rg.sheet,c,r),cr))continue;
+        var v=cellAt(alvo.sheet,alvo.c1+(c-rg.c1),alvo.r1+(r-rg.r1));
+        if(isErr(v))return v;if(typeof v==='number')s+=v}
+      return s;
+    case 'SEERRO':
+      if(args.length<1||args.length>2)throw Falha('O SEERRO tem 2 partes: a conta ; o que mostrar se der erro.');
+      var x=scalar(args[0]);if(isErr(x))return args.length>1?scalar(args[1]):'';return x;
+    default:throw Falha('A planilha não conhece a fórmula '+nome+'. Confira se escreveu certo (ex.: CONT.SE, SOMASE, SEERRO, SOMA).');
+  }
+}
+function avaliar(texto){
+  var t=tokenize(texto),p=0;
+  function peek(v){return t[p]&&t[p].t==='op'&&t[p].v===v}
+  function expr(){var a=term();while(peek('+')||peek('-')){var op=t[p++].v,b=term();a=arit(a,b,op)}return a}
+  function term(){var a=unario();while(peek('*')||peek('/')){var op=t[p++].v,b=unario();a=arit(a,b,op)}return a}
+  function unario(){if(peek('-')){p++;var v=num(unario());return isErr(v)?v:-v}if(peek('+')){p++;return unario()}var x=prim();if(peek('%')){p++;var n=num(x);return isErr(n)?n:n/100}return x}
+  function prim(){
+    var k=t[p];if(!k)throw Falha('A fórmula terminou antes da hora. Falta alguma coisa no final.');
+    p++;
+    if(k.t==='num'||k.t==='str')return k.v;
+    if(k.t==='ref')return parseRef(k.sheet,k.v);
+    if(k.t==='op'&&k.v==='('){var v=expr();if(!peek(')'))throw Falha('Faltou fechar um parêntese ).');p++;return v}
+    if(k.t==='name'){
+      if(!peek('(')){if(k.v==='BASE')throw Falha("O nome da aba vai entre aspas simples: 'base de dados'!");throw Falha('Não entendi "'+k.v+'". Faltou abrir parêntese depois do nome da fórmula?')}
+      p++;var args=[];
+      if(peek(')')){p++;return chamar(k.v,args)}
+      while(true){args.push(expr());if(peek(';')){p++;continue}if(peek(')')){p++;break}throw Falha('Faltou um ; entre as partes ou um ) no final do '+k.v+'.')}
+      return chamar(k.v,args);
+    }
+    throw Falha('Tem um "'+k.v+'" fora do lugar.');
+  }
+  function arit(a,b,op){a=num(a);if(isErr(a))return a;b=num(b);if(isErr(b))return b;
+    if(op==='+')return a+b;if(op==='-')return a-b;if(op==='*')return a*b;
+    if(b===0)return Err('#DIV/0!','Divisão por zero. Proteja a conta com SEERRO.');return a/b}
+  var v=expr();
+  if(p<t.length)throw Falha('Sobrou alguma coisa no fim da fórmula. Confira os parênteses e os ; .');
+  return v;
+}
+function gVal(ref){
+  if(ref in gCache)return gCache[ref];
+  var raw=(G[ref]||'').trim(),v;
+  gMsgs[ref]='';
+  if(gStack[ref]){gMsgs[ref]='Esta fórmula usa ela mesma (referência circular).';return Err('#REF!',gMsgs[ref])}
+  gStack[ref]=true;
+  try{
+    if(!raw)v='';
+    else if(raw[0]!=='='){var n=lerNumero(raw);v=isNaN(n)?raw:n}
+    else{v=avaliar(raw.slice(1));if(v&&v.range)v=scalar(v)}
+  }catch(e){v=Err('#ERRO!',e.formula?e.message:'Não consegui entender esta fórmula.')}
+  delete gStack[ref];
+  if(isErr(v)&&!gMsgs[ref])gMsgs[ref]=v.msg||'';
+  gCache[ref]=v;return v;
+}
+function lerNumero(s){s=String(s).replace(/R\$|%|\s/g,'');if(!s)return NaN;s=s.replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');return /^-?\d+(\.\d+)?$/.test(s)?parseFloat(s):NaN}
+function mostrar(ref,v){
+  if(isErr(v))return v.err;if(v==='')return '';if(typeof v!=='number')return String(v);
+  if(ref[0]==='E')return pct(v);
+  return Number.isInteger(v)?fmt0.format(v):fmt2.format(v);
+}
+// arrastar: muda as referências sem $ (igual ao Google Sheets)
+function deslocar(f,dc,dr){
+  return f.split('"').map(function(parte,i){
+    if(i%2)return parte;
+    return parte.replace(/(^|[^A-Za-z0-9_.])(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?![A-Za-z0-9_.(])/g,function(all,pre,dc1,col,dr1,row){
+      var c=colNum(col.toUpperCase())+(dc1?0:dc),r=+row+(dr1?0:dr);
+      if(c<1||r<1)return pre+'#REF!';
+      return pre+dc1+colStr(c)+dr1+r;
+    });
+  }).join('"');
+}
+var grid=$('grid');
+(function(){
+  var h='<tr><th></th>'+['A','B','C','D','E'].map(function(c){return '<th>'+c+'</th>'}).join('')+'</tr>';
+  for(var r=20;r<=25;r++){
+    h+='<tr class="'+(r===20?'head':r===25?'tot':'')+'"><th>'+r+'</th>';
+    ['A','B','C','D','E'].forEach(function(c){var ref=c+r;
+      h+=GFIX[ref]!==undefined?'<td class="fix">'+GFIX[ref]+'</td>':'<td><input id="g'+ref+'" data-ref="'+ref+'" autocomplete="off" spellcheck="false" aria-label="Célula '+ref+'"></td>'});
+    h+='</tr>';
+  }
+  grid.innerHTML=h;
+})();
+function gRender(){
+  gCache={};gMsgs={};
+  GEDIT.forEach(function(ref){
+    var inp=$('g'+ref),v=gVal(ref);
+    if(document.activeElement!==inp){inp.value=mostrar(ref,v);inp.classList.toggle('err',!!isErr(v))}
+  });
+  gBarra();
+}
+function gBarra(){
+  $('gAddr').textContent=gSel;
+  var inp=$('g'+gSel);
+  $('gBar').textContent=document.activeElement===inp?inp.value:(G[gSel]||'');
+  $('gCellMsg').textContent=gMsgs[gSel]||'';
+  GEDIT.forEach(function(ref){$('g'+ref).classList.toggle('sel',ref===gSel)});
+}
+grid.addEventListener('focusin',function(e){var ref=e.target.dataset.ref;if(!ref)return;gSel=ref;e.target.value=G[ref]||'';e.target.classList.remove('right','wrong','err');gBarra()});
+grid.addEventListener('input',function(e){if(e.target.dataset.ref)$('gBar').textContent=e.target.value});
+grid.addEventListener('focusout',function(e){var ref=e.target.dataset.ref;if(!ref)return;G[ref]=e.target.value.trim();gSave();gRender()});
+grid.addEventListener('keydown',function(e){
+  var ref=e.target.dataset.ref;if(!ref)return;
+  if(e.key==='Enter'){e.preventDefault();var col=ref[0],row=+ref.slice(1),nx=$('g'+col+(row+1));e.target.blur();if(nx)nx.focus();else{gSel=ref;gBarra()}}
+  if(e.key==='Escape'){e.target.value=G[ref]||'';e.target.blur()}
 });
+$('gDown').addEventListener('click',function(){
+  var col=gSel[0],row=+gSel.slice(1),f=G[gSel]||'';
+  if(!f){$('gCellMsg').textContent='Escreva uma fórmula na célula antes de arrastar.';return}
+  if(row>23){$('gCellMsg').textContent='Para arrastar para baixo, selecione uma célula da linha 21 a 23.';return}
+  for(var r=row+1;r<=24;r++)G[col+r]=f[0]==='='?'='+deslocar(f.slice(1),0,r-row):f;
+  gSave();gRender();
+});
+$('gRight').addEventListener('click',function(){
+  var ci=GCOLS.indexOf(gSel[0]),row=+gSel.slice(1),f=G[gSel]||'';
+  if(!f){$('gCellMsg').textContent='Escreva uma fórmula na célula antes de arrastar.';return}
+  if(ci>1){$('gCellMsg').textContent='Para arrastar para a direita, selecione uma célula da coluna B ou C.';return}
+  for(var c=ci+1;c<=2;c++)G[GCOLS[c]+row]=f[0]==='='?'='+deslocar(f.slice(1),c-ci,0):f;
+  gSave();gRender();
+});
+$('gClear').addEventListener('click',function(){delete G[gSel];gSave();gRender()});
+
+// respostas certas, calculadas da base original
+function esperado(ref){
+  var c=ref[0],r=+ref.slice(1),canal=r<25?GFIX['A'+r]:null,n=0,f=0,l=0;
+  RAW.forEach(function(x){if(canal&&x[3]!==canal)return;n++;f+=x[4]*x[6];l+=x[4]*(x[6]-x[5])});
+  return c==='B'?n:c==='C'?f:c==='D'?l:l/f;
+}
+var gMelhor=-1;
+$('gCheck').addEventListener('click',function(){
+  gRender();
+  var certas=0,digitadas=0,vazias=0,erradas=[],sorte=[];
+  GEDIT.forEach(function(ref){
+    var raw=(G[ref]||'').trim(),v=gVal(ref),inp=$('g'+ref),ok=false;
+    if(!raw)vazias++;else if(raw[0]!=='=')digitadas++;
+    else if(typeof v==='number')ok=Math.abs(v-esperado(ref))<(ref[0]==='E'?0.0006:0.5);
+    // sem $ o intervalo da base desce junto ao arrastar; às vezes o número bate só por sorte
+    if(ok&&/^[BCD]2[2-4]$/.test(ref)){var re=/'base de dados'!\$?[A-Za-z]+\$?(\d+):\$?[A-Za-z]+\$?(\d+)/gi,mm;while((mm=re.exec(raw))){if(mm[1]!=='2'||mm[2]!=='31'){ok=false;sorte.push(ref);break}}}
+    if(ok)certas++;else if(raw&&raw[0]==='='&&sorte.indexOf(ref)<0)erradas.push(ref);
+    inp.classList.toggle('right',ok);inp.classList.toggle('wrong',!ok&&!!raw);
+  });
+  $('gScore').textContent=certas+' de 20 células certas';
+  var m=[];
+  if(certas===20)m.push('<div class="note"><b>Perfeito!</b> Sua tabela está certa e você fez tudo sozinho.</div>');
+  if(vazias)m.push('<div class="note">Ainda faltam '+vazias+' células para preencher.</div>');
+  if(digitadas)m.push('<div class="warn">'+digitadas+' célula(s) estão com número digitado. Troque por uma fórmula: número digitado não atualiza quando a base muda.</div>');
+  if(sorte.length)m.push('<div class="warn"><b>'+sorte.join(', ')+'</b> deram o número certo, mas por sorte: o intervalo da base desceu junto quando você arrastou (clique e veja: E3:E32, E4:E33…). Trave o intervalo com $, como na parte A5.</div>');
+  if(erradas.length)m.push('<div class="warn">Confira a fórmula de: <b>'+erradas.join(', ')+'</b>. Clique na célula e veja na barra lá em cima o que está escrito.</div>');
+  $('gMsg').innerHTML=m.join('');
+  if(certas>gMelhor){gMelhor=certas;enviar({desafioAcertos:certas},$('syncD'))}
+});
+gRender();
 
 // navegação
 var secs=[].slice.call(document.querySelectorAll('main section')),links=[].slice.call(document.querySelectorAll('#nav a'));
