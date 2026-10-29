@@ -150,6 +150,22 @@ body{margin:0}
 .gate .btn{font-size:1.05rem;padding:12px;background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
 .gate .err{color:var(--bad);font-weight:600;min-height:1.4em}
 @media (max-width:640px){.fxlabel{display:none}}
+table.blank td.num{color:var(--gold);font:700 1rem var(--mono)}
+table.blank tr.tot td{font-weight:700;background:var(--cell)}
+.hints{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.hint-col{display:flex;flex-direction:column;gap:8px;padding:16px}
+.hint-col>b{font-family:var(--display);color:var(--navy);font-size:1.05rem}
+details{border-top:1px solid var(--line);padding-top:6px}
+summary{cursor:pointer;font-weight:700;color:var(--gold);font-size:.9rem}
+details p{margin-top:6px;font-size:.95rem}
+details code{font-size:.8rem;word-break:break-all}
+.checker{display:grid;grid-template-columns:1fr auto;gap:12px 16px;align-items:center}
+.checker .ans{display:flex;align-items:center;gap:10px}
+.checker input{font:700 1rem var(--mono);width:150px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg)}
+.checker input.right{border-color:var(--live)} .checker input.wrong{border-color:var(--bad)}
+.checker .ans span{font-weight:700;min-width:1.5em}
+.checker .btn,.checker .score,.checker .sync{grid-column:1/-1}
+@media (max-width:640px){.checker{grid-template-columns:1fr}.checker .ans{margin-bottom:6px}}
 @media (max-width:860px){.demo,.explorer{grid-template-columns:1fr}.rules{grid-template-columns:1fr 1fr}.targets{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.rules{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
@@ -172,7 +188,7 @@ body{margin:0}
   <div class="bar-in">
     <span class="fxlabel">Painel&nbsp;Inteligente</span>
     <nav id="nav">
-      <a href="#inicio">A1 Início</a><a href="#desafio">A2 Desafio</a><a href="#regras">A3 Regras</a><a href="#formulas">A4 Fórmulas</a><a href="#cifrao">A5 Cifrão</a><a href="#missao">A6 Missão</a><a href="#confere">A7 Confere</a><a href="#quiz">A8 Quiz</a>
+      <a href="#inicio">A1 Início</a><a href="#desafio">A2 Desafio</a><a href="#regras">A3 Regras</a><a href="#formulas">A4 Fórmulas</a><a href="#cifrao">A5 Cifrão</a><a href="#missao">A6 Missão</a><a href="#confere">A7 Confere</a><a href="#sozinho">A8 Faça sozinho</a><a href="#quiz">A9 Quiz</a>
     </nav>
     <div class="me" id="me" hidden><span>Olá, <b id="meNome"></b></span><button type="button" id="meTrocar">trocar</button></div>
   </div>
@@ -285,8 +301,63 @@ body{margin:0}
   <div class="note"><b>O teste final:</b> o professor vai mudar um número na base de dados. Se o seu painel mudar junto, e o gráfico também, ele está inteligente.</div>
 </section>
 
+<section id="sozinho">
+  <span class="addr">A8 · FAÇA SOZINHO</span>
+  <h2>Desafio: uma tabela nova, sem copiar nada</h2>
+  <p>Até agora você copiou fórmulas prontas. Agora é com você. No <b>seu</b> painel, deixe duas linhas em branco abaixo da sua tabela e monte esta tabela nova, <b>Vendas por Canal</b>:</p>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="blank">
+    <thead><tr><th>Canal de venda</th><th class="num">Pedidos</th><th class="num">Faturamento</th><th class="num">Lucro bruto</th><th class="num">Margem</th></tr></thead>
+    <tbody>
+      <tr><td>E-commerce</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
+      <tr><td>Marketplace</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
+      <tr><td>Loja Física</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
+      <tr><td>WhatsApp</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
+      <tr class="tot"><td>Total</td><td class="num">?</td><td class="num">?</td><td class="num">?</td><td class="num">?</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>Regras do desafio:</b> nada de copiar e colar fórmula. Escreva cada fórmula com o que você aprendeu hoje: <code>CONT.SE</code>, <code>SOMASE</code>, <code>SEERRO</code>, <code>SOMA</code> e o cifrão <code>$</code>. Escreva a fórmula só na primeira linha e arraste para as outras. Digite os nomes dos canais exatamente como estão na base, sem espaço sobrando no final.</div>
+
+  <h3>Travou? Abra uma dica de cada vez</h3>
+  <div class="hints">
+    <div class="card hint-col"><b>Pedidos</b>
+      <details><summary>Dica 1</summary><p>Você quer <b>contar</b> só os pedidos de um canal. Qual fórmula conta com condição?</p></details>
+      <details><summary>Dica 2</summary><p>É o <code>CONT.SE</code>. Na base de dados, os canais estão na <b>coluna E</b>.</p></details>
+      <details><summary>Dica 3</summary><p><code>=CONT.SE('base de dados'!$E$2:$E$31;___)</code><br>No lugar do ___, clique na célula com o nome do canal.</p></details>
+    </div>
+    <div class="card hint-col"><b>Faturamento</b>
+      <details><summary>Dica 1</summary><p>Você quer <b>somar</b> só o que é de um canal. Qual fórmula soma com condição?</p></details>
+      <details><summary>Dica 2</summary><p>É o <code>SOMASE</code>: onde procurar ; o que procurar ; o que somar. O faturamento está na <b>coluna J</b>.</p></details>
+      <details><summary>Dica 3</summary><p><code>=SOMASE('base de dados'!$E$2:$E$31;___;'base de dados'!$_$2:$_$31)</code></p></details>
+    </div>
+    <div class="card hint-col"><b>Lucro bruto</b>
+      <details><summary>Dica 1</summary><p>É quase igual à fórmula do faturamento. O que muda?</p></details>
+      <details><summary>Dica 2</summary><p>Só muda <b>o que somar</b>: o lucro bruto está na <b>coluna K</b> da base.</p></details>
+    </div>
+    <div class="card hint-col"><b>Margem</b>
+      <details><summary>Dica 1</summary><p>Margem é o lucro dividido pelo faturamento <b>da mesma linha</b>.</p></details>
+      <details><summary>Dica 2</summary><p>Proteja a divisão para não aparecer <b>#DIV/0!</b>: <code>=SEERRO(___/___;0)</code>. Depois clique no botão <b>%</b>.</p></details>
+    </div>
+    <div class="card hint-col"><b>Total</b>
+      <details><summary>Dica 1</summary><p>Pedidos, faturamento e lucro do total: some as 4 linhas de cima com <code>SOMA</code>.</p></details>
+      <details><summary>Dica 2</summary><p>A margem do total <b>não</b> é soma. Faça lucro total dividido pelo faturamento total, com <code>SEERRO</code>.</p></details>
+    </div>
+  </div>
+
+  <h3>Confira: digite o que apareceu no seu painel</h3>
+  <form class="card checker" id="d2Form" novalidate>
+    <label for="d2a">Quantos pedidos vieram pelo <b>WhatsApp</b>?</label><div class="ans"><input id="d2a" inputmode="decimal" autocomplete="off"><span id="d2aR"></span></div>
+    <label for="d2b">Qual o faturamento da <b>Loja Física</b>?</label><div class="ans"><input id="d2b" inputmode="decimal" autocomplete="off"><span id="d2bR"></span></div>
+    <label for="d2c">Qual o lucro bruto do <b>E-commerce</b>?</label><div class="ans"><input id="d2c" inputmode="decimal" autocomplete="off"><span id="d2cR"></span></div>
+    <label for="d2d">Qual a margem do <b>Marketplace</b>? (em %)</label><div class="ans"><input id="d2d" inputmode="decimal" autocomplete="off"><span id="d2dR"></span></div>
+    <label for="d2e">Qual o lucro bruto da linha <b>Total</b>?</label><div class="ans"><input id="d2e" inputmode="decimal" autocomplete="off"><span id="d2eR"></span></div>
+    <button class="btn on" type="submit">Conferir minhas respostas</button>
+    <p class="score" id="d2Score"></p>
+    <p class="sync" id="syncD"></p>
+  </form>
+</section>
+
 <section id="quiz">
-  <span class="addr">A8 · QUIZ</span>
+  <span class="addr">A9 · QUIZ</span>
   <h2>Qual fórmula você usaria?</h2>
   <div class="quiz" id="quizBox"></div>
   <p class="score" id="quizScore"></p>
@@ -462,6 +533,22 @@ Q.forEach(function(q,qi){var d=document.createElement('div');d.className='card q
       if(n===Q.length&&!quizEnviado){quizEnviado=true;enviar({quizAcertos:c},$('syncQ')).then(function(ok){if(!ok)quizEnviado=false})}
     });o.appendChild(b)});
   qb.appendChild(d)});
+
+// A8 desafio: confere os números que o aluno achou no próprio painel (base original, sem as mudanças da A2)
+function orig(canal,campo){var s=0;RAW.forEach(function(r){if(r[3]!==canal)return;var f=r[4]*r[6],c=r[4]*r[5];s+=campo==='n'?1:campo==='fat'?f:f-c});return s}
+var lucroTotal=RAW.reduce(function(s,r){return s+r[4]*(r[6]-r[5])},0);
+var D2=[['d2a',orig('WhatsApp','n'),'n'],['d2b',orig('Loja Física','fat'),'n'],['d2c',orig('E-commerce','luc'),'n'],['d2d',orig('Marketplace','luc')/orig('Marketplace','fat')*100,'%'],['d2e',lucroTotal,'n']];
+function lerNumero(s){s=String(s).replace(/R\$|%|\s/g,'');if(!s)return NaN;s=s.replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');return parseFloat(s)}
+var d2Melhor=-1;
+$('d2Form').addEventListener('submit',function(e){
+  e.preventDefault();var c=0,vazio=0;
+  D2.forEach(function(q){var inp=$(q[0]),v=lerNumero(inp.value),ok;
+    if(isNaN(v)){vazio++;inp.className='';$(q[0]+'R').textContent='';return}
+    if(q[2]==='%'){if(v<=1)v=v*100;ok=Math.abs(v-q[1])<0.15}else ok=Math.abs(v-q[1])<1;
+    inp.className=ok?'right':'wrong';$(q[0]+'R').textContent=ok?'✓':'✗';$(q[0]+'R').style.color=ok?'var(--live)':'var(--bad)';if(ok)c++});
+  $('d2Score').textContent=vazio?'Preencha as 5 respostas para conferir.':c===5?'5 de 5! Sua tabela está certa. Você fez sozinho.':c+' de 5 certas. Volte no painel, confira a fórmula das que deram ✗ e tente de novo.';
+  if(!vazio&&c>d2Melhor){d2Melhor=c;enviar({desafioAcertos:c},$('syncD'))}
+});
 
 // navegação
 var secs=[].slice.call(document.querySelectorAll('main section')),links=[].slice.call(document.querySelectorAll('#nav a'));
