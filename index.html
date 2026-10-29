@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Painel Inteligente</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: uma página que rola como um site, seções com "endereço de célula" (A1, A2…) e barra fixa de navegação; demos ao vivo com os dados reais da base */
+:root{
+  --bg:#F3F5F9; --grid:#E3E8F1; --card:#FFFFFF; --fg:#18202E; --muted:#5B6578; --line:#D7DDE8;
+  --navy:#14284B; --onnavy:#FFFFFF; --gold:#B5841F; --goldsoft:#FFF3D6;
+  --live:#147A4A; --livesoft:#E2F4EA; --bad:#B4372B; --badsoft:#FCE9E6; --cell:#EEF2F8;
+  --p1:#2D6CDF; --p2:#C2410C; --p3:#147A4A;
+  --display:"Bricolage Grotesque",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --grid:#18202F; --card:#182133; --fg:#E8ECF4; --muted:#9BA6BB; --line:#2A3449;
+  --navy:#C7D5F2; --onnavy:#0F1522; --gold:#E3B455; --goldsoft:#2E2615;
+  --live:#5ED39A; --livesoft:#123024; --bad:#F38B7F; --badsoft:#3A1C19; --cell:#202A3E;
+  --p1:#7FA8F5; --p2:#F59A6B; --p3:#5ED39A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1522; --grid:#18202F; --card:#182133; --fg:#E8ECF4; --muted:#9BA6BB; --line:#2A3449;
+  --navy:#C7D5F2; --onnavy:#0F1522; --gold:#E3B455; --goldsoft:#2E2615;
+  --live:#5ED39A; --livesoft:#123024; --bad:#F38B7F; --badsoft:#3A1C19; --cell:#202A3E;
+  --p1:#7FA8F5; --p2:#F59A6B; --p3:#5ED39A; color-scheme:dark}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--fg);font:18px/1.6 var(--body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:100% 32px,100px 100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1080px;margin:0 auto;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:12px}
+.fxlabel{font:700 .8rem var(--mono);color:var(--muted);flex:none}
+.bar nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.bar nav a{font:500 .82rem var(--mono);color:var(--muted);text-decoration:none;padding:4px 9px;border-radius:4px;white-space:nowrap;border:1px solid transparent}
+.bar nav a.on{color:var(--navy);border-color:var(--gold);background:var(--goldsoft)}
+.progress{height:3px;background:var(--gold);width:0;transition:width .2s}
+main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 80px;display:flex;flex-direction:column;gap:72px}
+section{scroll-margin-top:70px;display:flex;flex-direction:column;gap:18px}
+.addr{font:700 .85rem var(--mono);color:var(--gold);letter-spacing:.04em}
+h1,h2,h3{font-family:var(--display);color:var(--navy);margin:0;line-height:1.08;text-wrap:balance}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800}
+h3{font-size:1.2rem;font-weight:800}
+p{margin:0;max-width:66ch}
+.big{font-size:1.25rem;color:var(--muted)}
+code,.mono{font-family:var(--mono)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.btn{font:700 .95rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--navy);border-radius:8px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--gold)}
+.btn.on{background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+/* hero */
+.hero{padding-top:32px;gap:22px}
+.formulabar{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;background:var(--card);overflow:hidden;max-width:720px}
+.formulabar .fx{font:700 1rem var(--mono);color:var(--muted);padding:12px 14px;border-right:1px solid var(--line);font-style:italic}
+.formulabar .typed{font:500 clamp(.9rem,2.4vw,1.2rem) var(--mono);padding:12px 14px;white-space:nowrap;overflow-x:auto;color:var(--navy)}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--gold);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hint{font-size:.9rem;color:var(--muted)}
+kbd{font:700 .8rem var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--card)}
+/* demo */
+.demo{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start}
+.basebox{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:.92rem;white-space:nowrap}
+th{position:sticky;top:0;background:var(--cell);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.num{text-align:right}
+input.qty{width:64px;font:700 .95rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--goldsoft);color:var(--fg);text-align:right}
+.panels{display:flex;flex-direction:column;gap:14px}
+.panel{border-radius:12px;padding:16px;border:2px solid var(--line);background:var(--card)}
+.panel.dead{border-color:var(--bad)}
+.panel.alive{border-color:var(--live)}
+.panel .tag{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em}
+.dead .tag{color:var(--bad)} .alive .tag{color:var(--live)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.kpi span{display:block;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi b{font:700 1.25rem var(--mono);color:var(--navy)}
+.kpi b.flash{animation:flash .7s}
+@keyframes flash{0%{background:var(--livesoft);color:var(--live)}100%{background:transparent}}
+.verdict{margin-top:10px;font-weight:700;font-size:.95rem}
+/* regras */
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.flip{perspective:900px;min-height:190px;cursor:pointer;border:0;background:none;padding:0;text-align:left;font:inherit;color:inherit}
+.flip .in{position:relative;width:100%;height:100%;min-height:190px;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line)}
+.front{background:var(--card)}
+.front b{font:700 3rem var(--mono);color:var(--gold);line-height:1}
+.back{background:var(--navy);color:var(--onnavy);transform:rotateY(180deg)}
+.back code{background:transparent;color:var(--onnavy);font-weight:700}
+/* explorador */
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.explorer{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.say{font-family:var(--display);font-size:1.5rem;color:var(--navy);font-weight:500;line-height:1.25}
+.fbig{font:500 clamp(.85rem,2vw,1.05rem)/1.7 var(--mono);background:var(--cell);border-radius:8px;padding:14px;overflow-x:auto;white-space:nowrap}
+.part1{color:var(--p1);font-weight:700}.part2{color:var(--p2);font-weight:700}.part3{color:var(--p3);font-weight:700}
+.legend{display:flex;flex-direction:column;gap:4px;font-size:.95rem}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.result{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.result b{font:700 2rem var(--mono);color:var(--live)}
+.result b.err{color:var(--bad)}
+.lbl{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+/* cifrão */
+.dollar td.err{color:var(--bad);font-weight:700}
+.dollar td.ok{color:var(--live);font-weight:700}
+.note{border-left:4px solid var(--gold);background:var(--goldsoft);padding:12px 14px;border-radius:0 8px 8px 0}
+.warn{border-left:4px solid var(--bad);background:var(--badsoft);padding:12px 14px;border-radius:0 8px 8px 0}
+/* missão */
+.mission .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.mission td{vertical-align:middle}
+.mission td.ref{font:700 .95rem var(--mono);color:var(--gold)}
+.mission tr.drag td{background:var(--livesoft);color:var(--live);font-weight:700}
+.mission tr.done td{opacity:.55}
+.mission tr.done td.ref{text-decoration:line-through}
+.fcell{display:flex;align-items:center;gap:8px}
+.fcell code{font-size:.85rem;background:var(--cell);padding:4px 8px;border-radius:4px}
+.copy{font:700 .75rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--navy);border-radius:6px;padding:4px 9px;cursor:pointer;flex:none}
+.copy.ok{color:var(--live);border-color:var(--live)}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--live);cursor:pointer}
+.meter{height:10px;background:var(--cell);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--live);width:0;transition:width .3s}
+/* conferência e quiz */
+.targets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.target{text-align:center}
+.target b{display:block;font:700 1.5rem var(--mono);color:var(--navy)}
+.target span{font-size:.85rem;color:var(--muted)}
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.q .opts button{font:700 .9rem var(--mono)}
+.q .opts button.right{background:var(--livesoft);border-color:var(--live);color:var(--live)}
+.q .opts button.wrong{background:var(--badsoft);border-color:var(--bad);color:var(--bad)}
+.q .fb{margin-top:8px;font-weight:600;min-height:1.6em}
+.score{font:700 1.1rem var(--mono);color:var(--navy)}
+footer{text-align:center;color:var(--muted);font-size:.9rem}
+*{box-sizing:border-box}
+body{margin:0}
+.me{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none;font-size:.85rem}
+.me b{color:var(--navy)}
+.me button{font:600 .78rem var(--body);background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0}
+.sync{font-size:.8rem;color:var(--muted)}
+.sync.ok{color:var(--live)} .sync.err{color:var(--bad)}
+[hidden]{display:none!important}
+.gate{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.gate form{width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px}
+.gate input{font:600 1.2rem var(--body);padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);width:100%}
+.gate input:focus{border-color:var(--gold);outline:none}
+.gate .btn{font-size:1.05rem;padding:12px;background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
+.gate .err{color:var(--bad);font-weight:600;min-height:1.4em}
+@media (max-width:640px){.fxlabel{display:none}}
+@media (max-width:860px){.demo,.explorer{grid-template-columns:1fr}.rules{grid-template-columns:1fr 1fr}.targets{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.rules{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate" hidden>
+  <form class="card" id="gateForm" novalidate>
+    <span class="addr">AULA DE HOJE · PAINEL INTELIGENTE</span>
+    <h2>Antes de começar, qual é o seu nome?</h2>
+    <p>Seu nome vai para o painel da turma. Assim o professor vê quem já fez a missão e o quiz.</p>
+    <label class="lbl" for="gateNome">Seu nome</label>
+    <input id="gateNome" type="text" autocomplete="name" maxlength="60" placeholder="Ex.: Victória">
+    <button class="btn" type="submit" id="gateBtn">Entrar na aula</button>
+    <p class="err" id="gateErr"></p>
+  </form>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="fxlabel">Painel&nbsp;Inteligente</span>
+    <nav id="nav">
+      <a href="#inicio">A1 Início</a><a href="#desafio">A2 Desafio</a><a href="#regras">A3 Regras</a><a href="#formulas">A4 Fórmulas</a><a href="#cifrao">A5 Cifrão</a><a href="#missao">A6 Missão</a><a href="#confere">A7 Confere</a><a href="#quiz">A8 Quiz</a>
+    </nav>
+    <div class="me" id="me" hidden><span>Olá, <b id="meNome"></b></span><button type="button" id="meTrocar">trocar</button></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</div>
+
+<main>
+
+<section id="inicio" class="hero">
+  <span class="addr">A1 · AULA DE HOJE</span>
+  <h1>Seu painel já está bonito.<br>Hoje ele aprende a pensar.</h1>
+  <p class="big">Até agora você digitou os números do painel. Hoje você vai trocar cada número por uma fórmula que vai sozinha até a <b>base de dados</b>, faz a conta e se atualiza toda vez que algo mudar.</p>
+  <div class="formulabar" aria-label="Exemplo de fórmula"><span class="fx">fx</span><span class="typed"><span id="typed"></span><span class="caret"></span></span></div>
+  <p class="hint">Use <kbd>→</kbd> ou <kbd>←</kbd> no teclado para passar de uma parte para outra.</p>
+</section>
+
+<section id="desafio">
+  <span class="addr">A2 · O DESAFIO</span>
+  <h2>Mude a base e veja quem percebe</h2>
+  <p>Esta é a mesma base de dados da planilha, com os 30 pedidos. Mude a <b>quantidade</b> de qualquer pedido e olhe os dois painéis ao lado.</p>
+  <div class="demo">
+    <div class="basebox"><table>
+      <thead><tr><th>Pedido</th><th>Produto</th><th>Categoria</th><th class="num">Qtd</th><th class="num">Preço</th></tr></thead>
+      <tbody id="baseRows"></tbody>
+    </table></div>
+    <div class="panels">
+      <div class="panel dead"><span class="tag">Painel com número digitado</span>
+        <div class="kpis"><div class="kpi"><span>Faturamento</span><b>90.338</b></div><div class="kpi"><span>Lucro bruto</span><b>38.637</b></div><div class="kpi"><span>Margem</span><b>42,8%</b></div><div class="kpi"><span>Pedidos</span><b>30</b></div></div>
+        <p class="verdict" id="deadV">Parado. Ele não sabe de onde vieram esses números.</p></div>
+      <div class="panel alive"><span class="tag">Painel com fórmula</span>
+        <div class="kpis"><div class="kpi"><span>Faturamento</span><b id="kFat"></b></div><div class="kpi"><span>Lucro bruto</span><b id="kLuc"></b></div><div class="kpi"><span>Margem</span><b id="kMar"></b></div><div class="kpi"><span>Pedidos</span><b id="kPed"></b></div></div>
+        <p class="verdict" id="aliveV" style="color:var(--live)">Vivo. Mude uma quantidade e veja.</p></div>
+      <button class="btn" id="resetBase" type="button">Voltar a base ao original</button>
+    </div>
+  </div>
+</section>
+
+<section id="regras">
+  <span class="addr">A3 · AS REGRAS</span>
+  <h2>Quatro regras que valem para toda fórmula</h2>
+  <p>Clique em cada cartão para ver a explicação.</p>
+  <div class="rules">
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>=</b><span>Como a planilha sabe que é uma fórmula?</span></div><div class="face back"><span>Toda fórmula começa com o sinal de <b>igual</b>. Sem ele, a planilha acha que você escreveu um texto.</span><code>=SOMA(…)</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>;</b><span>Como separar as partes da fórmula?</span></div><div class="face back"><span>Com <b>ponto e vírgula</b>. Nossa planilha está em português, então a vírgula fica para os números.</span><code>=CONT.SE(C2:C31;A11)</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>'!'</b><span>Como buscar um número em outra aba?</span></div><div class="face back"><span>Nome da aba entre <b>aspas simples</b> e depois um <b>ponto de exclamação</b>.</span><code>'base de dados'!J2</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>$</b><span>Para que serve o cifrão?</span></div><div class="face back"><span>Ele <b>trava</b> a célula. Quando você arrasta a fórmula, o que tem $ não sai do lugar. Veja na parte A5.</span><code>$C$2:$C$31</code></div></div></button>
+  </div>
+  <div class="note"><b>Truque para não errar:</b> digite <code>=SOMA(</code>, clique na aba <b>base de dados</b>, selecione as células com o mouse e aperte <kbd>Enter</kbd>. A planilha escreve o endereço para você.</div>
+</section>
+
+<section id="formulas">
+  <span class="addr">A4 · AS 5 FÓRMULAS</span>
+  <h2>Cada fórmula é uma frase</h2>
+  <p>Escolha uma fórmula e mexa nas opções. O resultado é calculado com a base de verdade, a mesma da A2.</p>
+  <div class="tabs" id="fxTabs"></div>
+  <div class="explorer card">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <span class="lbl">Em português</span>
+      <div class="say" id="fxSay"></div>
+      <div id="fxOpts" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <span class="lbl">Na planilha</span>
+      <div class="fbig" id="fxFormula"></div>
+      <div class="legend" id="fxLegend"></div>
+      <div class="result"><span class="lbl">Resultado</span><b id="fxResult"></b></div>
+      <p class="hint" id="fxUse"></p>
+    </div>
+  </div>
+</section>
+
+<section id="cifrao" class="dollar">
+  <span class="addr">A5 · O CIFRÃO</span>
+  <h2>O que acontece quando você arrasta a fórmula</h2>
+  <p>Você escreve a fórmula na primeira linha da tabela e arrasta para baixo. A planilha vai mudando os endereços sozinha. Ligue e desligue o cifrão e compare.</p>
+  <div class="row"><button class="btn on" id="dOn" type="button">Com $</button><button class="btn" id="dOff" type="button">Sem $</button></div>
+  <div class="card" style="padding:0;overflow-x:auto"><table>
+    <thead><tr><th>Linha</th><th>Categoria</th><th>Fórmula depois de arrastar</th><th class="num">Resultado</th><th class="num">Certo</th></tr></thead>
+    <tbody id="dRows"></tbody>
+  </table></div>
+  <div id="dMsg"></div>
+</section>
+
+<section id="missao" class="mission">
+  <span class="addr">A6 · SUA MISSÃO</span>
+  <h2>Agora é no seu painel</h2>
+  <p>Escolha seu nome. Para cada linha: copie a fórmula, clique na célula indicada no <b>seu</b> painel, cole e aperte <kbd>Enter</kbd>. Depois marque a caixinha.</p>
+  <div class="row" id="who"></div>
+  <div style="display:flex;align-items:center;gap:12px"><div class="meter" style="flex:1"><i id="meter"></i></div><span class="score" id="meterTxt"></span></div>
+  <p class="sync" id="syncM"></p>
+  <div id="warns" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Feito</th><th>Célula</th><th>O que é</th><th>Fórmula</th></tr></thead>
+    <tbody id="mRows"></tbody>
+  </table></div>
+  <p class="hint">Linhas verdes: não precisa copiar nada. Selecione as células, segure o quadradinho azul do canto e arraste.</p>
+</section>
+
+<section id="confere">
+  <span class="addr">A7 · CONFERÊNCIA</span>
+  <h2>Seu painel está certo?</h2>
+  <p>Se as fórmulas estiverem certas, o Modelo 1 mostra exatamente estes números:</p>
+  <div class="targets">
+    <div class="card target"><b>90.338</b><span>Faturamento</span></div>
+    <div class="card target"><b>38.637</b><span>Lucro bruto</span></div>
+    <div class="card target"><b>42,8%</b><span>Margem geral</span></div>
+    <div class="card target"><b>30</b><span>Pedidos</span></div>
+  </div>
+  <p>No Modelo 2: ticket médio <b>3.011,27</b>, volume <b>350</b>, custo <b>51.701</b> e a coluna Part.% somando <b>100%</b>.</p>
+  <div class="note"><b>O teste final:</b> o professor vai mudar um número na base de dados. Se o seu painel mudar junto, e o gráfico também, ele está inteligente.</div>
+</section>
+
+<section id="quiz">
+  <span class="addr">A8 · QUIZ</span>
+  <h2>Qual fórmula você usaria?</h2>
+  <div class="quiz" id="quizBox"></div>
+  <p class="score" id="quizScore"></p>
+  <p class="sync" id="syncQ"></p>
+  <div class="card"><h3>Desafio extra para quem terminar antes</h3><p style="margin-top:8px">Victória e Isabella: na sua aba pessoal, a coluna "Resultado" do <b>Meu novo computador</b> ainda está vazia. Preencha com <code>MÉDIA</code>, <code>SOMA</code> e <code>MÁXIMO</code>. O Francisco já fez na aba dele, pode olhar lá.</p></div>
+</section>
+
+<footer>Instituto Lótus · Aula de Painéis Inteligentes</footer>
+</main>
+
+<script>
+(function(){
+var fmt0=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+var fmt2=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+var pct=function(v){return (v*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%'};
+// pedido, produto, categoria, canal, qtd, custo unit, preço unit
+var RAW=[["PED-1001","Notebook Dell Inspiron","Informática","E-commerce",4,2800,3850],["PED-1002","Monitor LG 27\"","Informática","Marketplace",6,850,1290],["PED-1003","Cadeira Ergonômica","Mobiliário","Loja Física",5,480,790],["PED-1004","Teclado Mecânico","Acessórios","E-commerce",12,160,290],["PED-1005","Mouse Sem Fio","Acessórios","WhatsApp",18,45,95],["PED-1006","Fone Bluetooth","Eletrônicos","Marketplace",15,90,180],["PED-1007","Mesa Digitalizadora","Informática","E-commerce",7,230,420],["PED-1008","Suporte Articulado","Acessórios","Loja Física",10,85,160],["PED-1009","Mochila Executiva","Papelaria","WhatsApp",8,110,210],["PED-1010","HD Externo 2TB","Informática","E-commerce",9,210,360],["PED-1011","Impressora Multifuncional","Informática","Loja Física",3,620,980],["PED-1012","Cabo HDMI 4K","Acessórios","Marketplace",25,18,45],["PED-1013","Webcam Full HD","Eletrônicos","E-commerce",14,120,230],["PED-1014","Carregador por Indução","Eletrônicos","WhatsApp",16,40,89],["PED-1015","Luminária de Mesa LED","Mobiliário","Loja Física",11,55,119],["PED-1016","Hub USB-C","Acessórios","Marketplace",20,75,145],["PED-1017","Caixa de Som Bluetooth","Eletrônicos","E-commerce",8,130,260],["PED-1018","Kit Teclado e Mouse","Acessórios","Loja Física",12,70,135],["PED-1019","Mesa Ajustável","Mobiliário","E-commerce",3,1100,1850],["PED-1020","Smartwatch Pro","Eletrônicos","Marketplace",10,310,590],["PED-1021","Filtro de Linha","Acessórios","Loja Física",22,28,65],["PED-1022","Mousepad Extra Grande","Acessórios","WhatsApp",15,22,59],["PED-1023","Adaptador Multiportas","Informática","E-commerce",18,65,125],["PED-1024","Apoio para Pés","Mobiliário","Loja Física",14,45,95],["PED-1025","Gravador de Voz","Eletrônicos","Marketplace",5,140,270],["PED-1026","Roteador Wi-Fi 6","Informática","E-commerce",7,240,450],["PED-1027","Ring Light Tripé","Eletrônicos","WhatsApp",13,60,130],["PED-1028","Caneta Stylus","Informática","Marketplace",9,85,175],["PED-1029","Headset Gamer","Eletrônicos","E-commerce",11,155,310],["PED-1030","Pasta Organizadora","Papelaria","Loja Física",20,15,38]];
+var qty=RAW.map(function(r){return r[4]});
+var CATS=["Informática","Eletrônicos","Mobiliário","Acessórios","Papelaria"];
+var CANAIS=["E-commerce","Marketplace","Loja Física","WhatsApp"];
+function fat(i){return qty[i]*RAW[i][6]} function cus(i){return qty[i]*RAW[i][5]} function luc(i){return fat(i)-cus(i)}
+function sum(fn,filter){var s=0;for(var i=0;i<RAW.length;i++){if(!filter||filter(i))s+=fn(i)}return s}
+var $=function(id){return document.getElementById(id)};
+var API='https://script.google.com/macros/s/AKfycbxdn469AYMr3aUECqZwuW7K5p5roBfrWNw6TfA6WapfuvP8zX_PvvNkXXk-d-o64q9n/exec';
+var aluno='';
+try{aluno=localStorage.getItem('pi-nome')||''}catch(e){}
+// envia o progresso para a aba "Registro do Desafio"; sem Content-Type para não disparar CORS
+function enviar(dados,syncEl){
+  if(!aluno)return Promise.resolve(false);
+  dados.nome=aluno;
+  if(syncEl){syncEl.className='sync';syncEl.textContent='Salvando no painel da turma…'}
+  return fetch(API,{method:'POST',body:JSON.stringify(dados)}).then(function(r){return r.json()}).then(function(j){
+    if(!j.ok)throw new Error(j.erro||'erro');
+    if(syncEl){syncEl.className='sync ok';syncEl.textContent='Salvo no painel da turma.'}return true;
+  }).catch(function(){
+    if(syncEl){syncEl.className='sync err';syncEl.textContent='Não consegui salvar. Confira a internet e marque a caixinha de novo.'}return false;
+  });
+}
+var B="'base de dados'!";
+
+// hero: fórmula sendo digitada
+var full="=SOMA('base de dados'!J2:J31)",t=0;
+function type(){$('typed').textContent=full.slice(0,t);if(t<full.length){t++;setTimeout(type,70)}}
+if(matchMedia('(prefers-reduced-motion:reduce)').matches){t=full.length}type();
+
+// A2 demo
+var tb=$('baseRows');
+RAW.forEach(function(r,i){var tr=document.createElement('tr');
+  tr.innerHTML='<td class="mono">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="num"><input class="qty" type="number" min="0" id="q'+i+'" value="'+r[4]+'" aria-label="Quantidade '+r[0]+'"></td><td class="num">'+fmt0.format(r[6])+'</td>';
+  tb.appendChild(tr)});
+function setK(id,v){var el=$(id);if(el.textContent!==v){el.textContent=v;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}}
+function renderDemo(){
+  var F=sum(fat),L=sum(luc),changed=qty.some(function(q,i){return q!==RAW[i][4]});
+  setK('kFat',fmt0.format(F));setK('kLuc',fmt0.format(L));setK('kMar',F?pct(L/F):'0,0%');setK('kPed',String(RAW.length));
+  $('deadV').textContent=changed?'Continua igual. Agora ele está mostrando um número errado.':'Parado. Ele não sabe de onde vieram esses números.';
+  $('aliveV').textContent=changed?'Atualizou sozinho. Isso é um painel inteligente.':'Vivo. Mude uma quantidade e veja.';
+  renderFx();renderDollar();
+}
+tb.addEventListener('input',function(e){if(e.target.classList.contains('qty')){var i=+e.target.id.slice(1);qty[i]=Math.max(0,+e.target.value||0);renderDemo()}});
+$('resetBase').addEventListener('click',function(){RAW.forEach(function(r,i){qty[i]=r[4];$('q'+i).value=r[4]});renderDemo()});
+
+// A3 cartões
+document.querySelectorAll('.flip').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+
+// A4 explorador
+var COLS={J:{n:'Faturamento',f:fat},K:{n:'Lucro bruto',f:luc},F:{n:'Quantidade',f:function(i){return qty[i]}},I:{n:'Custo total',f:cus}};
+var st={fx:'SOMASE',col:'J',cat:'Informática',vazio:false};
+var FX={
+  'SOMA':{say:'"Some tudo desta coluna."',use:'No painel: Faturamento, Lucro bruto, Volume de itens e Custo total.',opts:['col'],
+    f:function(){return '=SOMA(<span class="part1">'+B+st.col+'2:'+st.col+'31</span>)'},leg:[['p1','a coluna que vai ser somada']],
+    r:function(){return fmt0.format(sum(COLS[st.col].f))}},
+  'CONT.VALORES':{say:'"Conte quantas linhas estão preenchidas."',use:'No painel: Total de pedidos. Cada pedido tem um código na coluna A.',opts:[],
+    f:function(){return '=CONT.VALORES(<span class="part1">'+B+'A2:A31</span>)'},leg:[['p1','a coluna com os códigos dos pedidos']],
+    r:function(){return String(RAW.length)}},
+  'CONT.SE':{say:'"Conte só os pedidos desta categoria."',use:'No painel: a coluna Qtd Pedidos da tabela.',opts:['cat'],
+    f:function(){return '=CONT.SE(<span class="part1">'+B+'$C$2:$C$31</span>;<span class="part2">"'+st.cat+'"</span>)'},leg:[['p1','onde procurar'],['p2','o que procurar (no seu painel é a célula com o nome, ex.: A11)']],
+    r:function(){return String(RAW.filter(function(r){return r[2]===st.cat}).length)}},
+  'SOMASE':{say:'"Some, mas só o que for desta categoria."',use:'No painel: as colunas Faturamento e Lucro bruto da tabela.',opts:['cat','col2'],
+    f:function(){return '=SOMASE(<span class="part1">'+B+'$C$2:$C$31</span>;<span class="part2">"'+st.cat+'"</span>;<span class="part3">'+B+'$'+st.col+'$2:$'+st.col+'$31</span>)'},leg:[['p1','onde procurar'],['p2','o que procurar'],['p3','o que somar']],
+    r:function(){var c=COLS[st.col].f;return fmt0.format(sum(c,function(i){return RAW[i][2]===st.cat}))}},
+  'SEERRO':{say:'"Faça a divisão. Se der erro, mostre zero."',use:'No painel: Margem e Ticket médio. Sem SEERRO, uma categoria vazia mostra #DIV/0!',opts:['cat','vazio'],
+    f:function(){return '=SEERRO(<span class="part1">Lucro/Faturamento</span>;<span class="part2">0</span>)'},leg:[['p1','a conta que pode dar erro'],['p2','o que mostrar se der erro']],
+    r:function(){if(st.vazio)return '0';var F=sum(fat,function(i){return RAW[i][2]===st.cat}),L=sum(luc,function(i){return RAW[i][2]===st.cat});return F?pct(L/F):'0'}}
+};
+var tabs=$('fxTabs');
+Object.keys(FX).forEach(function(k){var b=document.createElement('button');b.type='button';b.className='btn mono';b.textContent=k;b.dataset.k=k;
+  b.addEventListener('click',function(){st.fx=k;if(k==='SOMASE'&&(st.col==='F'||st.col==='I'))st.col='J';renderFx()});tabs.appendChild(b)});
+function chips(list,key,labelFn){var w=document.createElement('div');w.className='row';
+  list.forEach(function(v){var b=document.createElement('button');b.type='button';b.className='btn'+(st[key]===v?' on':'');b.textContent=labelFn?labelFn(v):v;
+    b.addEventListener('click',function(){st[key]=v;renderFx()});w.appendChild(b)});return w}
+function renderFx(){
+  var d=FX[st.fx];
+  tabs.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.k===st.fx)});
+  $('fxSay').textContent=d.say;$('fxUse').textContent=d.use;
+  var o=$('fxOpts');o.innerHTML='';
+  if(d.opts.indexOf('cat')>-1){var l=document.createElement('span');l.className='lbl';l.textContent='Categoria';o.appendChild(l);o.appendChild(chips(CATS,'cat'))}
+  if(d.opts.indexOf('col')>-1){var l2=document.createElement('span');l2.className='lbl';l2.textContent='Coluna';o.appendChild(l2);o.appendChild(chips(['J','K','F','I'],'col',function(v){return v+' · '+COLS[v].n}))}
+  if(d.opts.indexOf('col2')>-1){var l3=document.createElement('span');l3.className='lbl';l3.textContent='O que somar';o.appendChild(l3);o.appendChild(chips(['J','K'],'col',function(v){return COLS[v].n}))}
+  if(d.opts.indexOf('vazio')>-1){var l4=document.createElement('span');l4.className='lbl';l4.textContent='Teste';o.appendChild(l4);o.appendChild(chips([false,true],'vazio',function(v){return v?'Categoria sem vendas':'Categoria normal'}))}
+  $('fxFormula').innerHTML=d.f();
+  $('fxLegend').innerHTML=d.leg.map(function(x){return '<span><i style="background:var(--'+x[0]+')"></i>'+x[1]+'</span>'}).join('');
+  var res=$('fxResult');res.textContent=d.r();res.classList.remove('err');
+  if(st.fx==='SEERRO'&&st.vazio){$('fxUse').textContent='Sem o SEERRO, esta célula mostraria #DIV/0! porque não dá para dividir por zero. Com ele, aparece 0.'}
+}
+
+// A5 cifrão
+var dollar=true;
+function renderDollar(){
+  var rows='',wrong=0;
+  CATS.forEach(function(c,k){
+    var r=11+k,range=dollar?'$C$2:$C$31':'C'+(2+k)+':C'+(31+k);
+    var got=RAW.filter(function(x,i){return x[2]===c&&(dollar||i>=k)}).length,right=RAW.filter(function(x){return x[2]===c}).length;
+    if(got!==right)wrong++;
+    rows+='<tr><td class="mono">'+r+'</td><td>'+c+'</td><td class="mono">=CONT.SE('+B+range+';A'+r+')</td><td class="num mono '+(got===right?'ok':'err')+'">'+got+'</td><td class="num mono">'+right+'</td></tr>'});
+  $('dRows').innerHTML=rows;
+  $('dMsg').innerHTML=dollar?'<div class="note">Com o cifrão, o intervalo <b>C2:C31</b> fica parado e só o <b>A11</b> muda (A12, A13…). Todas as linhas procuram na base inteira.</div>'
+    :'<div class="warn">Sem o cifrão, o intervalo desceu junto: C3:C32, C4:C33… e foi deixando pedidos de fora. Repare que só '+wrong+' linha ficou errada. O erro se esconde, e é por isso que ele é perigoso.</div>';
+  $('dOn').classList.toggle('on',dollar);$('dOff').classList.toggle('on',!dollar);
+}
+$('dOn').addEventListener('click',function(){dollar=true;renderDollar()});
+$('dOff').addEventListener('click',function(){dollar=false;renderDollar()});
+
+// A6 missão
+var cs=function(col,ref){return '=CONT.SE('+B+'$'+col+'$2:$'+col+'$31;'+ref+')'};
+var ss=function(col,ref,s){return '=SOMASE('+B+'$'+col+'$2:$'+col+'$31;'+ref+';'+B+'$'+s+'$2:$'+s+'$31)'};
+var M={
+  'Victória':{aba:'Painel Victória',warns:[],rows:[['A6','Faturamento total','=SOMA('+B+'J2:J31)'],['D6','Lucro bruto','=SOMA('+B+'K2:K31)'],['G6','Margem geral','=SEERRO(D6/A6;0)'],['J6','Total de pedidos','=CONT.VALORES('+B+'A2:A31)'],['B11','Qtd pedidos da categoria',cs('C','A11')],['C11','Faturamento da categoria',ss('C','A11','J')],['D11','Lucro da categoria',ss('C','A11','K')],['E11','Margem da categoria','=SEERRO(D11/C11;0)'],['B11:E11','Arraste para baixo até a linha 15',null],['B16','Total geral','=SOMA(B11:B15)'],['B16 → D16','Arraste para a direita até a coluna D',null],['E16','Margem do total','=SEERRO(D16/C16;0)']]},
+  'Isabella':{aba:'Painel Isabella',warns:['Apague o espaço que sobra no fim de "Informática " (B9) e "Eletrônicos " (B10). Com espaço, a fórmula acha que é outra palavra e dá zero.','O Lucro bruto está digitado como 386,37. O certo é 38.637. Quando você colocar a fórmula, ela corrige sozinha.','Depois das fórmulas, a margem vai aparecer como 0,356. O valor está certo, só falta mostrar como porcentagem. Clique na célula F5, segure a tecla Ctrl e arraste o mouse da F9 até a F14. Com essas células selecionadas, clique no botão % na barra de ferramentas lá em cima (fica ao lado do R$). Pronto: aparece 35,6%.'],rows:[['B5','Faturamento total','=SOMA('+B+'J2:J31)'],['D5','Lucro bruto','=SOMA('+B+'K2:K31)'],['F5','Margem geral','=SEERRO(D5/B5;0)'],['H5','Total de pedidos','=CONT.VALORES('+B+'A2:A31)'],['C9','Qtd pedidos da categoria',cs('C','B9')],['D9','Faturamento da categoria',ss('C','B9','J')],['E9','Lucro da categoria',ss('C','B9','K')],['F9','Margem da categoria','=SEERRO(E9/D9;0)'],['C9:F9','Arraste para baixo até a linha 13',null],['C14','Total geral','=SOMA(C9:C13)'],['C14 → E14','Arraste para a direita até a coluna E',null],['F14','Margem do total','=SEERRO(E14/D14;0)']]},
+  'Francisco':{aba:'Francisco Maia',warns:['Apague o espaço que sobra no fim de "E-commerce " (A10), "Marketplace " (A11) e "Loja Física " (A12).','Corrija "Ticket Médico" para "Ticket Médio" (em A4 e E9).'],rows:[['A5','Ticket médio','=SEERRO(SOMA('+B+'J2:J31)/CONT.VALORES('+B+'A2:A31);0)'],['D5','Volume de itens','=SOMA('+B+'F2:F31)'],['G5','Custo total','=SOMA('+B+'I2:I31)'],['J5','Margem operacional','=SEERRO(SOMA('+B+'K2:K31)/SOMA('+B+'J2:J31);0)'],['B10','Qtd pedidos do canal',cs('E','A10')],['C10','Faturamento do canal',ss('E','A10','J')],['D10','Participação %','=SEERRO(C10/$C$14;0)'],['E10','Ticket médio do canal','=SEERRO(C10/B10;0)'],['B10:E10','Arraste para baixo até a linha 13',null],['B14','Total geral','=SOMA(B10:B13)'],['B14 → D14','Arraste para a direita até a coluna D (o D14 tem que dar 100%)',null],['E14','Ticket médio geral','=SEERRO(C14/B14;0)']]}
+};
+var who='Victória',done={};
+try{var sv=JSON.parse(localStorage.getItem('pi-missao')||'{}');if(sv.who&&M[sv.who])who=sv.who;done=sv.done||{}}catch(e){}
+function save(){try{localStorage.setItem('pi-missao',JSON.stringify({who:who,done:done}))}catch(e){}}
+var wb=$('who');
+Object.keys(M).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='btn';b.dataset.n=n;b.textContent=n+' · aba "'+M[n].aba+'"';b.addEventListener('click',function(){who=n;save();renderMission();enviarMissao()});wb.appendChild(b)});
+function enviarMissao(){var m=M[who],ok=m.rows.filter(function(r,i){return done[who+i]}).length;
+  enviar({painel:m.aba,missaoFeitos:ok,missaoTotal:m.rows.length},$('syncM'))}
+function renderMission(){
+  wb.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.n===who)});
+  var m=M[who];
+  $('warns').innerHTML=m.warns.length?m.warns.map(function(w){return '<div class="warn"><b>Antes de começar:</b> '+w+'</div>'}).join(''):'<div class="note">Sua tabela está sem erros de digitação. Pode ir direto para as fórmulas.</div>';
+  var h='';
+  m.rows.forEach(function(r,i){var key=who+i,isD=!r[2],ck=done[key]?' checked':'';
+    h+='<tr class="'+(isD?'drag':'')+(done[key]?' done':'')+'"><td><input type="checkbox" id="c'+i+'" data-k="'+key+'"'+ck+' aria-label="Marcar '+r[0]+' como feito"></td><td class="ref">'+r[0]+'</td><td>'+r[1]+'</td><td>'+(isD?'Sem fórmula nova: só arrastar':'<div class="fcell"><code>'+r[2].replace(/</g,'&lt;')+'</code><button type="button" class="copy">Copiar</button></div>')+'</td></tr>'});
+  $('mRows').innerHTML=h;
+  var tot=m.rows.length,ok=m.rows.filter(function(r,i){return done[who+i]}).length;
+  $('meter').style.width=(ok/tot*100)+'%';$('meterTxt').textContent=ok+' de '+tot+(ok===tot?' · painel inteligente!':'');
+}
+$('mRows').addEventListener('change',function(e){if(e.target.dataset.k){done[e.target.dataset.k]=e.target.checked;save();renderMission();enviarMissao()}});
+$('mRows').addEventListener('click',function(e){var b=e.target.closest('.copy');if(!b)return;var code=b.previousElementSibling;
+  var ok=function(){b.textContent='Copiado';b.classList.add('ok');setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok')},1500)};
+  var fb=function(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Ctrl+C'};
+  try{navigator.clipboard.writeText(code.textContent).then(ok,fb)}catch(err){fb()}});
+
+// A8 quiz
+var Q=[['Quero saber quantos pedidos vieram pelo WhatsApp.','CONT.SE','Isso. Contar só o que é de um canal é CONT.SE.'],
+  ['Quero o faturamento só da Papelaria.','SOMASE','Isso. Somar só uma categoria é SOMASE.'],
+  ['Quero o total de unidades vendidas.','SOMA','Isso. É só somar a coluna de quantidade.'],
+  ['Quero saber quantos pedidos existem ao todo.','CONT.VALORES','Isso. Conta as linhas preenchidas da coluna de códigos.'],
+  ['Minha margem está mostrando #DIV/0!. O que eu coloco em volta da conta?','SEERRO','Isso. O SEERRO troca o erro por zero.']];
+var opts=['SOMA','CONT.VALORES','CONT.SE','SOMASE','SEERRO'],score={},quizEnviado=false;
+var qb=$('quizBox');
+Q.forEach(function(q,qi){var d=document.createElement('div');d.className='card q';
+  d.innerHTML='<b>'+(qi+1)+'. '+q[0]+'</b><div class="opts"></div><div class="fb"></div>';
+  var o=d.querySelector('.opts'),fbk=d.querySelector('.fb');
+  opts.forEach(function(op){var b=document.createElement('button');b.type='button';b.className='btn';b.textContent=op;
+    b.addEventListener('click',function(){
+      o.querySelectorAll('button').forEach(function(x){x.classList.remove('right','wrong')});
+      if(op===q[1]){b.classList.add('right');fbk.style.color='var(--live)';fbk.textContent=q[2];if(score[qi]===undefined)score[qi]=true}
+      else{b.classList.add('wrong');fbk.style.color='var(--bad)';fbk.textContent='Ainda não. Leia a pergunta de novo e pense na frase de cada fórmula.';if(score[qi]===undefined)score[qi]=false}
+      var n=Object.keys(score).length,c=Object.keys(score).filter(function(k){return score[k]}).length;
+      $('quizScore').textContent=n===Q.length?'Acertou de primeira: '+c+' de '+Q.length+(c===Q.length?'. Mandou bem!':''):'';
+      if(n===Q.length&&!quizEnviado){quizEnviado=true;enviar({quizAcertos:c},$('syncQ')).then(function(ok){if(!ok)quizEnviado=false})}
+    });o.appendChild(b)});
+  qb.appendChild(d)});
+
+// navegação
+var secs=[].slice.call(document.querySelectorAll('main section')),links=[].slice.call(document.querySelectorAll('#nav a'));
+function cur(){var y=scrollY+120,c=0;secs.forEach(function(s,i){if(s.offsetTop<=y)c=i});return c}
+function onScroll(){var c=cur();links.forEach(function(a,i){a.classList.toggle('on',i===c)});
+  var h=document.documentElement.scrollHeight-innerHeight;$('progress').style.width=(h>0?scrollY/h*100:0)+'%';
+  var on=links[c];if(on&&on.scrollIntoView&&on.parentNode.scrollWidth>on.parentNode.clientWidth){on.parentNode.scrollLeft=on.offsetLeft-40}}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('keydown',function(e){if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  var c=cur();if(e.key==='ArrowRight'&&c<secs.length-1){e.preventDefault();secs[c+1].scrollIntoView()}
+  if(e.key==='ArrowLeft'&&c>0){e.preventDefault();secs[c-1].scrollIntoView()}});
+
+// nome do aluno
+function semAcento(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim()}
+function mostrarAluno(){$('me').hidden=!aluno;$('meNome').textContent=aluno;$('gate').hidden=!!aluno;if(!aluno)$('gateNome').focus()}
+$('gateForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var nome=$('gateNome').value.replace(/\s+/g,' ').trim();
+  if(nome.length<2){$('gateErr').textContent='Digite seu nome para entrar.';return}
+  aluno=nome;try{localStorage.setItem('pi-nome',aluno)}catch(err){}
+  var k=semAcento(nome);
+  Object.keys(M).forEach(function(n){if(k.indexOf(semAcento(n))===0){who=n;save()}});
+  $('gateErr').textContent='';mostrarAluno();renderMission();enviarMissao();
+});
+$('meTrocar').addEventListener('click',function(){aluno='';try{localStorage.removeItem('pi-nome')}catch(err){}$('gateNome').value='';mostrarAluno()});
+
+renderDemo();renderMission();onScroll();mostrarAluno();
+})();
+</script>
+</body>
+</html>
