@@ -3,6 +3,11 @@
 var ABA = 'Registro do Desafio';
 var CAB = ['Aluno', 'Painel escolhido', 'Entrou em', 'Missão (passos feitos)', 'Missão concluída', 'Quiz (acertos de 5)', 'Desafio concluído', 'Última atividade'];
 var TOTAL_QUIZ = 5;
+var TOTAL_MISSAO = 12; // passos da missão de cada aluno no site
+
+function inteiro(v, min, max) {
+  return typeof v === 'number' && Math.floor(v) === v && v >= min && v <= max;
+}
 
 function doGet() {
   return json({ ok: true, servico: 'painel-inteligente' });
@@ -30,11 +35,11 @@ function doPost(e) {
       atual = [nome, '', agora, '', 'Não', '', 'Não', agora];
     }
     if (d.painel) atual[1] = limpar(d.painel);
-    if (typeof d.missaoFeitos === 'number' && typeof d.missaoTotal === 'number') {
-      atual[3] = d.missaoFeitos + ' de ' + d.missaoTotal;
-      if (d.missaoTotal > 0 && d.missaoFeitos >= d.missaoTotal) atual[4] = 'Sim';
+    if (inteiro(d.missaoFeitos, 0, TOTAL_MISSAO)) {
+      atual[3] = d.missaoFeitos + ' de ' + TOTAL_MISSAO;
+      if (d.missaoFeitos === TOTAL_MISSAO) atual[4] = 'Sim';
     }
-    if (typeof d.quizAcertos === 'number') atual[5] = d.quizAcertos + ' de ' + TOTAL_QUIZ;
+    if (inteiro(d.quizAcertos, 0, TOTAL_QUIZ)) atual[5] = d.quizAcertos + ' de ' + TOTAL_QUIZ;
     atual[6] = (atual[4] === 'Sim' && atual[5] !== '') ? 'Sim' : 'Não';
     atual[7] = agora;
     aba.getRange(linha, 1, 1, CAB.length).setNumberFormat('@').setValues([atual]);
@@ -63,8 +68,9 @@ function chave(s) {
 
 // Tira espaços extras, limita o tamanho e impede que o texto vire fórmula na planilha
 function limpar(s) {
-  s = String(s || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-  return s.replace(/^[=+\-@]+/, '').trim();
+  s = String(s || '').replace(/[\x00-\x1F\x7F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+  while (/^[\s=+\-@'"]/.test(s)) s = s.slice(1);
+  return s;
 }
 
 function json(o) {
