@@ -1,0 +1,52 @@
+/* extras desta aula: endereço do site no lugar da barra de fórmulas, site de mentira, laboratório de design */
+a{color:var(--gold);font-weight:700}
+a.btn{text-decoration:none;display:inline-block}
+.formulabar .fx{font-style:normal}
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan .card{display:flex;flex-direction:column;gap:6px}
+.editor{display:flex;flex-direction:column;gap:12px}
+.editor label{font-weight:700}
+input.txt{font:600 1.05rem var(--body);padding:10px 12px;border:2px solid var(--line);border-radius:8px;background:var(--goldsoft);color:var(--fg);width:100%;min-width:0;flex:1}
+input.txt:focus{border-color:var(--gold);outline:none}
+.site{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card);margin-top:10px}
+.site .url{font:500 .78rem var(--mono);color:var(--muted);padding:6px 10px;background:var(--cell);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site .ban{padding:26px 16px;background:var(--navy);color:var(--onnavy);font:800 1.4rem/1.15 var(--display);overflow-wrap:anywhere}
+.site .ban.lock{background:var(--badsoft);color:var(--bad);font:700 1rem var(--body)}
+.site .ban.none{background:var(--cell);color:var(--muted);font:700 1rem var(--body)}
+.lab{border:1px solid #D7DDE8;border-radius:10px;overflow:hidden;background:#fff;color:#18202E}
+.lab-ban{padding:22px 16px;background:#14284B;color:#fff;font:800 1.6rem/1.1 var(--display)}
+.lab-body{padding:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.lab-h{font:800 1.15rem var(--display);color:#14284B}
+.lab-p{margin:0;font-size:.98rem;color:#18202E}
+.lab-btn{background:#B5841F;color:#fff;font-weight:700;padding:8px 14px;border-radius:8px}
+.lab.c6 .lab-ban{background:#C2185B;color:#FFEB3B}.lab.c6 .lab-h{color:#2E7D32}.lab.c6 .lab-p{color:#6A1B9A}.lab.c6 .lab-btn{background:#00ACC1;color:#B71C1C}
+.lab.f3 .lab-ban{font-family:"Comic Sans MS","Chalkboard SE",cursive}.lab.f3 .lab-h{font-family:"Courier New",monospace}.lab.f3 .lab-p{font-family:Georgia,"Times New Roman",serif;font-style:italic}
+.lab.flat .lab-ban,.lab.flat .lab-h,.lab.flat .lab-p,.lab.flat .lab-btn{font-size:1.05rem;font-weight:700}
+.lab.low .lab-p{color:#C9CED6}.lab.low .lab-h{color:#B9C0CC}
+.phone{max-width:250px;width:100%;justify-self:center;border:8px solid var(--navy);border-radius:28px;padding:4px;background:var(--card)}
+.phone .site{margin:0;border-radius:16px}
+.phone .ban{font-size:1.9rem;padding:18px 12px}
+.blocks{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.blk{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:600;font-size:.95rem;background:var(--cell)}
+.blk.ok{background:var(--livesoft);color:var(--live);border-color:var(--live)}
+.blk.no{background:var(--badsoft);color:var(--bad);border-color:var(--bad)}
+.blk.risk{background:var(--goldsoft);color:var(--fg);border-color:var(--gold)}
+.perm{display:flex;flex-direction:column;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.perm:last-child{border-bottom:0;padding-bottom:0}
+.perm .btn{font-size:.82rem;padding:5px 9px}
+.checks{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.checks li{font-weight:600}
+.checks li.ok{color:var(--live)}.checks li.no{color:var(--bad)}
+ol.steps{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.mission td.wrap,td.wrap{white-space:normal;min-width:220px}
+.mission td.what{white-space:normal;min-width:150px;font-weight:700}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+td.ref{font:700 .95rem var(--mono);color:var(--gold)}
+.linkbox{display:flex;flex-direction:column;gap:10px}
+.pr pre{margin:10px 0;white-space:pre-wrap;font:500 .88rem/1.5 var(--mono);background:var(--cell);padding:12px;border-radius:8px}
+.timerbox{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.clock{font:700 3rem var(--mono);color:var(--navy);line-height:1}
+.clock.end{color:var(--bad)}
+details.prof{border:1px solid var(--line)}
+details.prof p{max-width:none}
+@media (max-width:860px){.plan{grid-template-columns:1fr}}

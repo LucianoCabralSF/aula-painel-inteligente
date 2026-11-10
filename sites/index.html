@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portfólio no Ar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Mesmo estilo da aula Painel Inteligente: uma página que rola como um site, barra fixa de navegação e demonstrações ao vivo */
+:root{
+  --bg:#F3F5F9; --grid:#E3E8F1; --card:#FFFFFF; --fg:#18202E; --muted:#5B6578; --line:#D7DDE8;
+  --navy:#14284B; --onnavy:#FFFFFF; --gold:#B5841F; --goldsoft:#FFF3D6;
+  --live:#147A4A; --livesoft:#E2F4EA; --bad:#B4372B; --badsoft:#FCE9E6; --cell:#EEF2F8;
+  --p1:#2D6CDF; --p2:#C2410C; --p3:#147A4A;
+  --display:"Bricolage Grotesque",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --grid:#18202F; --card:#182133; --fg:#E8ECF4; --muted:#9BA6BB; --line:#2A3449;
+  --navy:#C7D5F2; --onnavy:#0F1522; --gold:#E3B455; --goldsoft:#2E2615;
+  --live:#5ED39A; --livesoft:#123024; --bad:#F38B7F; --badsoft:#3A1C19; --cell:#202A3E;
+  --p1:#7FA8F5; --p2:#F59A6B; --p3:#5ED39A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1522; --grid:#18202F; --card:#182133; --fg:#E8ECF4; --muted:#9BA6BB; --line:#2A3449;
+  --navy:#C7D5F2; --onnavy:#0F1522; --gold:#E3B455; --goldsoft:#2E2615;
+  --live:#5ED39A; --livesoft:#123024; --bad:#F38B7F; --badsoft:#3A1C19; --cell:#202A3E;
+  --p1:#7FA8F5; --p2:#F59A6B; --p3:#5ED39A; color-scheme:dark}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--fg);font:18px/1.6 var(--body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:100% 32px,100px 100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1080px;margin:0 auto;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:12px}
+.fxlabel{font:700 .8rem var(--mono);color:var(--muted);flex:none}
+.bar nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.bar nav a{font:500 .82rem var(--mono);color:var(--muted);text-decoration:none;padding:4px 9px;border-radius:4px;white-space:nowrap;border:1px solid transparent}
+.bar nav a.on{color:var(--navy);border-color:var(--gold);background:var(--goldsoft)}
+.progress{height:3px;background:var(--gold);width:0;transition:width .2s}
+main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 80px;display:flex;flex-direction:column;gap:72px}
+section{scroll-margin-top:70px;display:flex;flex-direction:column;gap:18px}
+.addr{font:700 .85rem var(--mono);color:var(--gold);letter-spacing:.04em}
+h1,h2,h3{font-family:var(--display);color:var(--navy);margin:0;line-height:1.08;text-wrap:balance}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800}
+h3{font-size:1.2rem;font-weight:800}
+p{margin:0;max-width:66ch}
+.big{font-size:1.25rem;color:var(--muted)}
+code,.mono{font-family:var(--mono)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.btn{font:700 .95rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--navy);border-radius:8px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--gold)}
+.btn.on{background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+/* hero */
+.hero{padding-top:32px;gap:22px}
+.formulabar{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;background:var(--card);overflow:hidden;max-width:720px}
+.formulabar .fx{font:700 1rem var(--mono);color:var(--muted);padding:12px 14px;border-right:1px solid var(--line);font-style:italic}
+.formulabar .typed{font:500 clamp(.9rem,2.4vw,1.2rem) var(--mono);padding:12px 14px;white-space:nowrap;overflow-x:auto;color:var(--navy)}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--gold);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hint{font-size:.9rem;color:var(--muted)}
+kbd{font:700 .8rem var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--card)}
+/* demo */
+.demo{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start}
+.basebox{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:.92rem;white-space:nowrap}
+th{position:sticky;top:0;background:var(--cell);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.num{text-align:right}
+input.qty{width:64px;font:700 .95rem var(--mono);padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--goldsoft);color:var(--fg);text-align:right}
+.panels{display:flex;flex-direction:column;gap:14px}
+.panel{border-radius:12px;padding:16px;border:2px solid var(--line);background:var(--card)}
+.panel.dead{border-color:var(--bad)}
+.panel.alive{border-color:var(--live)}
+.panel .tag{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em}
+.dead .tag{color:var(--bad)} .alive .tag{color:var(--live)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.kpi span{display:block;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi b{font:700 1.25rem var(--mono);color:var(--navy)}
+.kpi b.flash{animation:flash .7s}
+@keyframes flash{0%{background:var(--livesoft);color:var(--live)}100%{background:transparent}}
+.verdict{margin-top:10px;font-weight:700;font-size:.95rem}
+/* regras */
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.flip{perspective:900px;min-height:190px;cursor:pointer;border:0;background:none;padding:0;text-align:left;font:inherit;color:inherit}
+.flip .in{position:relative;width:100%;height:100%;min-height:190px;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line)}
+.front{background:var(--card)}
+.front b{font:700 3rem var(--mono);color:var(--gold);line-height:1}
+.back{background:var(--navy);color:var(--onnavy);transform:rotateY(180deg)}
+.back code{background:transparent;color:var(--onnavy);font-weight:700}
+/* explorador */
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.explorer{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.say{font-family:var(--display);font-size:1.5rem;color:var(--navy);font-weight:500;line-height:1.25}
+.fbig{font:500 clamp(.85rem,2vw,1.05rem)/1.7 var(--mono);background:var(--cell);border-radius:8px;padding:14px;overflow-x:auto;white-space:nowrap}
+.part1{color:var(--p1);font-weight:700}.part2{color:var(--p2);font-weight:700}.part3{color:var(--p3);font-weight:700}
+.legend{display:flex;flex-direction:column;gap:4px;font-size:.95rem}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.result{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.result b{font:700 2rem var(--mono);color:var(--live)}
+.result b.err{color:var(--bad)}
+.lbl{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+/* cifrão */
+.dollar td.err{color:var(--bad);font-weight:700}
+.dollar td.ok{color:var(--live);font-weight:700}
+.note{border-left:4px solid var(--gold);background:var(--goldsoft);padding:12px 14px;border-radius:0 8px 8px 0}
+.warn{border-left:4px solid var(--bad);background:var(--badsoft);padding:12px 14px;border-radius:0 8px 8px 0}
+/* missão */
+.mission .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.mission td{vertical-align:middle}
+.mission td.ref{font:700 .95rem var(--mono);color:var(--gold)}
+.mission tr.drag td{background:var(--livesoft);color:var(--live);font-weight:700}
+.mission tr.done td{opacity:.55}
+.mission tr.done td.ref{text-decoration:line-through}
+.fcell{display:flex;align-items:center;gap:8px}
+.fcell code{font-size:.85rem;background:var(--cell);padding:4px 8px;border-radius:4px}
+.copy{font:700 .75rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--navy);border-radius:6px;padding:4px 9px;cursor:pointer;flex:none}
+.copy.ok{color:var(--live);border-color:var(--live)}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--live);cursor:pointer}
+.meter{height:10px;background:var(--cell);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--live);width:0;transition:width .3s}
+/* conferência e quiz */
+.targets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.target{text-align:center}
+.target b{display:block;font:700 1.5rem var(--mono);color:var(--navy)}
+.target span{font-size:.85rem;color:var(--muted)}
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.q .opts button{font:700 .9rem var(--mono)}
+.q .opts button.right{background:var(--livesoft);border-color:var(--live);color:var(--live)}
+.q .opts button.wrong{background:var(--badsoft);border-color:var(--bad);color:var(--bad)}
+.q .fb{margin-top:8px;font-weight:600;min-height:1.6em}
+.score{font:700 1.1rem var(--mono);color:var(--navy)}
+footer{text-align:center;color:var(--muted);font-size:.9rem}
+*{box-sizing:border-box}
+body{margin:0}
+.me{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none;font-size:.85rem}
+.me b{color:var(--navy)}
+.me button{font:600 .78rem var(--body);background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0}
+.sync{font-size:.8rem;color:var(--muted)}
+.sync.ok{color:var(--live)} .sync.err{color:var(--bad)}
+[hidden]{display:none!important}
+.gate{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.gate form{width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px}
+.gate input{font:600 1.2rem var(--body);padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);width:100%}
+.gate input:focus{border-color:var(--gold);outline:none}
+.gate .btn{font-size:1.05rem;padding:12px;background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
+.gate .err{color:var(--bad);font-weight:600;min-height:1.4em}
+@media (max-width:640px){.fxlabel{display:none}}
+.hints{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.hint-col{display:flex;flex-direction:column;gap:8px;padding:16px}
+.hint-col>b{font-family:var(--display);color:var(--navy);font-size:1.05rem}
+details{border-top:1px solid var(--line);padding-top:6px}
+summary{cursor:pointer;font-weight:700;color:var(--gold);font-size:.9rem}
+details p{margin-top:6px;font-size:.95rem}
+details code{font-size:.8rem;word-break:break-all}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.mini-bar{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:0}
+.mini-addr{font:700 .9rem var(--mono);color:var(--navy);padding:10px 12px;border-right:1px solid var(--line);min-width:64px;text-align:center}
+.mini-fx{font:700 .9rem var(--mono);font-style:italic;color:var(--muted);padding:10px;border-right:1px solid var(--line)}
+.mini-raw{font:500 .92rem var(--mono);padding:10px 12px;white-space:nowrap;overflow-x:auto;min-width:0;flex:1;color:var(--fg)}
+.mini-tools{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--cell)}
+.mini-tools .btn{font-size:.85rem;padding:6px 10px}
+.mini-msg{margin:0;padding:0 12px;font-size:.9rem;font-weight:600;color:var(--bad);max-width:none}
+.mini-msg:not(:empty){padding:8px 12px;background:var(--badsoft)}
+.mini-grid{overflow-x:auto}
+#grid{border-collapse:collapse;width:100%;min-width:640px}
+#grid th,#grid td{border:1px solid var(--line);padding:0;height:38px;font-size:.92rem}
+#grid th{background:var(--cell);color:var(--muted);font:700 .78rem var(--mono);text-align:center;letter-spacing:0;text-transform:none;position:static;width:44px}
+#grid td.fix{padding:0 10px;font-weight:700;color:var(--navy);background:var(--card)}
+#grid tr.head td.fix{background:var(--cell);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;color:var(--muted)}
+#grid tr.tot td{border-top:2px solid var(--navy)}
+#grid input{width:100%;height:100%;min-width:120px;border:0;background:var(--goldsoft);color:var(--fg);font:500 .92rem var(--mono);padding:0 10px;text-align:right;outline:none}
+#grid input:focus{text-align:left;background:var(--card);box-shadow:inset 0 0 0 2px var(--p1)}
+#grid input.err{color:var(--bad);font-weight:700}
+#grid input.right{background:var(--livesoft);box-shadow:inset 0 0 0 2px var(--live)}
+#grid input.wrong{background:var(--badsoft);box-shadow:inset 0 0 0 2px var(--bad)}
+#grid input.sel{box-shadow:inset 0 0 0 2px var(--p1)}
+@media (max-width:860px){.demo,.explorer{grid-template-columns:1fr}.rules{grid-template-columns:1fr 1fr}.targets{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.rules{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+/* extras desta aula: endereço do site no lugar da barra de fórmulas, site de mentira, laboratório de design */
+a{color:var(--gold);font-weight:700}
+a.btn{text-decoration:none;display:inline-block}
+.formulabar .fx{font-style:normal}
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan .card{display:flex;flex-direction:column;gap:6px}
+.editor{display:flex;flex-direction:column;gap:12px}
+.editor label{font-weight:700}
+input.txt{font:600 1.05rem var(--body);padding:10px 12px;border:2px solid var(--line);border-radius:8px;background:var(--goldsoft);color:var(--fg);width:100%;min-width:0;flex:1}
+input.txt:focus{border-color:var(--gold);outline:none}
+.site{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card);margin-top:10px}
+.site .url{font:500 .78rem var(--mono);color:var(--muted);padding:6px 10px;background:var(--cell);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site .ban{padding:26px 16px;background:var(--navy);color:var(--onnavy);font:800 1.4rem/1.15 var(--display);overflow-wrap:anywhere}
+.site .ban.lock{background:var(--badsoft);color:var(--bad);font:700 1rem var(--body)}
+.site .ban.none{background:var(--cell);color:var(--muted);font:700 1rem var(--body)}
+.lab{border:1px solid #D7DDE8;border-radius:10px;overflow:hidden;background:#fff;color:#18202E}
+.lab-ban{padding:22px 16px;background:#14284B;color:#fff;font:800 1.6rem/1.1 var(--display)}
+.lab-body{padding:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.lab-h{font:800 1.15rem var(--display);color:#14284B}
+.lab-p{margin:0;font-size:.98rem;color:#18202E}
+.lab-btn{background:#B5841F;color:#fff;font-weight:700;padding:8px 14px;border-radius:8px}
+.lab.c6 .lab-ban{background:#C2185B;color:#FFEB3B}.lab.c6 .lab-h{color:#2E7D32}.lab.c6 .lab-p{color:#6A1B9A}.lab.c6 .lab-btn{background:#00ACC1;color:#B71C1C}
+.lab.f3 .lab-ban{font-family:"Comic Sans MS","Chalkboard SE",cursive}.lab.f3 .lab-h{font-family:"Courier New",monospace}.lab.f3 .lab-p{font-family:Georgia,"Times New Roman",serif;font-style:italic}
+.lab.flat .lab-ban,.lab.flat .lab-h,.lab.flat .lab-p,.lab.flat .lab-btn{font-size:1.05rem;font-weight:700}
+.lab.low .lab-p{color:#C9CED6}.lab.low .lab-h{color:#B9C0CC}
+.phone{max-width:250px;width:100%;justify-self:center;border:8px solid var(--navy);border-radius:28px;padding:4px;background:var(--card)}
+.phone .site{margin:0;border-radius:16px}
+.phone .ban{font-size:1.9rem;padding:18px 12px}
+.blocks{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.blk{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:600;font-size:.95rem;background:var(--cell)}
+.blk.ok{background:var(--livesoft);color:var(--live);border-color:var(--live)}
+.blk.no{background:var(--badsoft);color:var(--bad);border-color:var(--bad)}
+.blk.risk{background:var(--goldsoft);color:var(--fg);border-color:var(--gold)}
+.perm{display:flex;flex-direction:column;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.perm:last-child{border-bottom:0;padding-bottom:0}
+.perm .btn{font-size:.82rem;padding:5px 9px}
+.checks{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.checks li{font-weight:600}
+.checks li.ok{color:var(--live)}.checks li.no{color:var(--bad)}
+ol.steps{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.mission td.wrap,td.wrap{white-space:normal;min-width:220px}
+.mission td.what{white-space:normal;min-width:150px;font-weight:700}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+td.ref{font:700 .95rem var(--mono);color:var(--gold)}
+.linkbox{display:flex;flex-direction:column;gap:10px}
+.pr pre{margin:10px 0;white-space:pre-wrap;font:500 .88rem/1.5 var(--mono);background:var(--cell);padding:12px;border-radius:8px}
+.timerbox{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.clock{font:700 3rem var(--mono);color:var(--navy);line-height:1}
+.clock.end{color:var(--bad)}
+details.prof{border:1px solid var(--line)}
+details.prof p{max-width:none}
+@media (max-width:860px){.plan{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate" hidden>
+  <form class="card" id="gateForm" novalidate>
+    <span class="addr">MÓDULO 7 · MEU PORTFÓLIO NO AR</span>
+    <h2>Antes de começar, qual é o seu nome?</h2>
+    <p>Seu nome vai para o painel da turma. Assim o professor vê quem já fez cada missão e quem já tem o site no ar.</p>
+    <label class="lbl" for="gateNome">Seu primeiro nome</label>
+    <input id="gateNome" type="text" autocomplete="given-name" maxlength="60" placeholder="Ex.: Victória">
+    <button class="btn" type="submit" id="gateBtn">Entrar na aula</button>
+    <p class="err" id="gateErr"></p>
+  </form>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="fxlabel">Portfólio&nbsp;no&nbsp;Ar</span>
+    <nav id="nav">
+      <a href="#inicio">Início</a><a href="#publicar">1 Publicar</a><a href="#pecas">2 Peças</a><a href="#m1">3 Missão 1</a><a href="#design">4 Design</a><a href="#m2">5 Missão 2</a><a href="#permissao">6 Permissão</a><a href="#m3">7 Missão 3</a><a href="#textos">8 Textos</a><a href="#m4">9 Missão 4</a><a href="#quiz">10 Quiz</a><a href="#palco">11 Palco</a>
+    </nav>
+    <div class="me" id="me" hidden><span>Olá, <b id="meNome"></b></span><button type="button" id="meTrocar">trocar</button></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</div>
+
+<main>
+
+<section id="inicio" class="hero">
+  <span class="addr">/inicio · RETA FINAL DO CURSO</span>
+  <h1>Tudo o que você fez,<br>em um endereço só.</h1>
+  <p class="big">Seus trabalhos estão guardados no Drive, e só você vê. Nestas aulas você monta um <b>site</b> que reúne tudo e apresenta para a turma no dia do Projeto Integrador.</p>
+  <div class="formulabar" aria-label="Endereço do site"><span class="fx">https://</span><span class="typed"><span id="typed"></span><span class="caret"></span></span></div>
+  <div class="plan">
+    <div class="card"><span class="addr">AULA 1</span><h3>O site no ar</h3><p>Partes 1 a 5: criar, montar a página inicial, dar identidade visual e publicar.</p></div>
+    <div class="card"><span class="addr">AULA 2</span><h3>O site cheio e testado</h3><p>Partes 6 a 10: colocar os trabalhos dentro, testar como visitante, melhorar os textos.</p></div>
+    <div class="card"><span class="addr">AULA 3</span><h3>Apresentação</h3><p>Parte 11: conferir tudo e apresentar em 3 minutos.</p></div>
+  </div>
+  <div class="row"><a class="btn on" href="https://sites.google.com/new" target="_blank" rel="noopener">Abrir o Google Sites</a><a class="btn" href="https://drive.google.com" target="_blank" rel="noopener">Meu Drive</a></div>
+  <p class="hint">Use <kbd>→</kbd> ou <kbd>←</kbd> no teclado para passar de uma parte para outra.</p>
+</section>
+
+<section id="publicar">
+  <span class="addr">/publicar · AULA 1</span>
+  <h2>Mude o site e veja quem percebe</h2>
+  <p>Este é um editor de mentira, mas funciona igual ao Google Sites. Mude o título, escolha quem pode ver e observe as duas telas. Depois clique em <b>Publicar</b>.</p>
+  <div class="demo">
+    <div class="card editor">
+      <span class="lbl">Editor</span>
+      <label for="pTit">Título do topo</label>
+      <input class="txt" id="pTit" type="text" maxlength="60" value="Portfólio da Ana">
+      <span class="lbl">Quem pode ver</span>
+      <div class="row" id="pAcc"></div>
+      <button class="btn on" type="button" id="pPub">Publicar</button>
+      <p class="hint" id="pSaved">Rascunho salvo automaticamente.</p>
+    </div>
+    <div class="panels">
+      <div class="panel dead"><span class="tag">O que você vê no editor</span>
+        <div class="site"><div class="url">editor · rascunho</div><div class="ban" id="pDraft"></div></div>
+        <p class="verdict">Só você enxerga isto.</p></div>
+      <div class="panel alive"><span class="tag">O que o visitante vê</span>
+        <div class="site"><div class="url">sites.google.com/view/portfolio-da-ana</div><div class="ban" id="pLive"></div></div>
+        <p class="verdict" id="pV"></p></div>
+    </div>
+  </div>
+  <div class="note"><b>Publicado não é salvo.</b> O Sites salva sozinho o tempo todo, mas o mundo só vê a mudança depois que você clica em Publicar.</div>
+</section>
+
+<section id="pecas">
+  <span class="addr">/pecas · AULA 1</span>
+  <h2>As quatro peças de todo site</h2>
+  <p>Clique em cada cartão para ver a explicação.</p>
+  <div class="rules">
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>▤</b><span>O que é uma página?</span></div><div class="face back"><span>Um assunto, um item no menu. Para o seu portfólio bastam quatro: <b>Início, Meus Trabalhos, Sobre Mim e Contato</b>.</span><code>3 a 5 páginas</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>☰</b><span>O que é a navegação?</span></div><div class="face back"><span>O menu que liga as páginas. O nome de cada item <b>promete</b> o que a pessoa vai encontrar.</span><code>"Página 2" não diz nada</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>▬</b><span>O que é uma seção?</span></div><div class="face back"><span>Uma <b>faixa horizontal</b> dentro da página. O Sites monta em faixas: uma para o título, outra para o texto, outra para as imagens.</span><code>faixa, não caixa solta</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>◐</b><span>O que é o tema?</span></div><div class="face back"><span>As cores e fontes do <b>site inteiro</b>. Você escolhe uma vez e todas as páginas mudam juntas.</span><code>2 minutos para escolher</code></div></div></button>
+  </div>
+  <div class="warn"><b>Site aberto é aberto mesmo.</b> Não entra endereço de casa, telefone, nome completo de colega nem foto de outras pessoas sem autorização.</div>
+</section>
+
+<section id="m1" class="mission">
+  <span class="addr">/missao-1 · AULA 1</span>
+  <h2>Missão 1: o site no ar</h2>
+  <p>Agora é no <b>seu</b> Google Sites. Faça um passo, marque a caixinha e siga. A ordem importa: estrutura primeiro, conteúdo depois, visual por último.</p>
+  <div class="mwrap" data-m="m1"></div>
+  <div class="card linkbox">
+    <h3>Cole aqui o endereço do seu site publicado</h3>
+    <p>É o endereço que aparece depois de clicar em Publicar. Ele vai para a lista do professor e é o que você vai abrir no dia da apresentação.</p>
+    <div class="row"><input class="txt" id="siteUrl" type="url" placeholder="https://sites.google.com/view/..." aria-label="Endereço do meu site"><button class="btn on" type="button" id="siteSave">Salvar endereço</button></div>
+    <p class="sync" id="syncS"></p>
+  </div>
+</section>
+
+<section id="design">
+  <span class="addr">/design · AULA 1</span>
+  <h2>O mesmo texto, duas caras</h2>
+  <p>O texto desta página de mentira nunca muda. Mexa nas quatro escolhas e veja quando ela parece confiável.</p>
+  <div class="explorer card">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0" id="labOpts"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <div class="lab" id="lab"><div class="lab-ban">Portfólio da Ana</div><div class="lab-body"><b class="lab-h">Meus trabalhos</b><p class="lab-p">Aqui estão os projetos que construí no curso de informática: um painel, uma apresentação e um documento.</p><span class="lab-btn">Ver meus trabalhos</span></div></div>
+      <div class="result"><span class="lbl">Resultado</span><b id="labScore"></b></div>
+      <p class="hint" id="labMsg"></p>
+    </div>
+  </div>
+  <h3>O teste do celular</h3>
+  <p>Quase todo mundo vai abrir o seu site no celular. Digite o título do seu topo e veja se ele cabe.</p>
+  <div class="demo">
+    <div class="card editor"><label for="phTit">Título do topo do meu site</label><input class="txt" id="phTit" type="text" maxlength="90" value="Bem-vindo ao meu site de trabalhos do curso de informática"><p class="verdict" id="phV"></p></div>
+    <div class="phone"><div class="site"><div class="url">no celular</div><div class="ban" id="phBan"></div><div class="lab-body"><p class="lab-p" style="color:var(--muted)">O resto da página fica aqui embaixo.</p></div></div></div>
+  </div>
+</section>
+
+<section id="m2" class="mission">
+  <span class="addr">/missao-2 · AULA 1</span>
+  <h2>Missão 2: cara de site</h2>
+  <p>Cada decisão visual tem prazo de <b>dois minutos</b>. Escolheu, segue. Dá para trocar depois.</p>
+  <div class="mwrap" data-m="m2"></div>
+  <div class="note"><b>Sobrou tempo?</b> Insira um vídeo (Inserir › YouTube) ou um mapa de um lugar público (Inserir › Mapa), cada um em sua seção e com legenda. Nunca o endereço da sua casa.</div>
+</section>
+
+<section id="permissao">
+  <span class="addr">/permissao · AULA 2</span>
+  <h2>O que você vê não é o que o mundo vê</h2>
+  <p>Você incorporou quatro coisas no site. No seu computador tudo aparece, porque você está logado. Ajuste a permissão de cada arquivo e abra a <b>janela anônima</b> para ver como o visitante enxerga.</p>
+  <div class="demo">
+    <div class="card editor" id="permEd"></div>
+    <div class="panels">
+      <div class="panel alive"><span class="tag">Janela anônima · o visitante</span><div id="permView" class="blocks"></div><p class="verdict" id="permV"></p></div>
+      <button class="btn on" type="button" id="permGo">Abrir em janela anônima</button>
+      <p class="hint">No Chrome de verdade: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd>.</p>
+    </div>
+  </div>
+  <div class="warn"><b>Dado pessoal:</b> nunca incorpore uma planilha com nomes ou respostas de pessoas. Incorpore só o <b>gráfico</b> ou o painel.</div>
+  <h3>Incorporar ou colocar link?</h3>
+  <p>Incorpore o que a pessoa precisa ver ou usar na hora. Ponha link no que ela vai levar embora.</p>
+  <div class="quiz" id="sortBox"></div>
+</section>
+
+<section id="m3" class="mission">
+  <span class="addr">/missao-3 · AULA 2</span>
+  <h2>Missão 3: os trabalhos dentro do site</h2>
+  <p>Ordem que não muda: <b>liberar antes de incorporar</b>. Na página Meus Trabalhos, faça uma seção para cada módulo do curso.</p>
+  <div class="mwrap" data-m="m3"></div>
+  <div class="card"><h3>Formulário "Fale comigo" em 5 minutos</h3>
+    <ol class="steps"><li>Abra <a href="https://forms.new" target="_blank" rel="noopener">forms.new</a> e dê o título "O que você achou do meu portfólio?".</li><li>Crie três perguntas: uma de múltipla escolha, uma de escala de 1 a 5 e uma de resposta curta. Não peça nome completo nem telefone.</li><li>Em Configurações › Respostas, desligue a exigência de login.</li><li>No site: Inserir › Formulários, escolha o seu e aumente a altura até o botão Enviar aparecer.</li></ol></div>
+</section>
+
+<section id="textos">
+  <span class="addr">/textos · AULA 2</span>
+  <h2>Texto que enrola e texto que serve</h2>
+  <p>Quem chega ao seu site não sabe quem você é. Digite o título do seu topo e veja o que o teste diz.</p>
+  <div class="demo">
+    <div class="card editor"><label for="tTit">Meu título</label><input class="txt" id="tTit" type="text" maxlength="90" value="Bem-vindo ao meu site incrível"><div class="row" id="tEx"></div></div>
+    <div class="card"><span class="lbl">O teste do título</span><ul class="checks" id="tChecks"></ul><p class="verdict" id="tV"></p></div>
+  </div>
+  <h3>A máquina propõe, você assina</h3>
+  <p>Escreva a sua versão primeiro. Depois peça <b>cinco</b> variações para a IA, escolha uma com motivo e ponha um detalhe que só você sabe. Nunca coloque nome completo, endereço ou telefone no comando.</p>
+  <div class="quiz" id="prompts"></div>
+</section>
+
+<section id="m4" class="mission">
+  <span class="addr">/missao-4 · AULA 2</span>
+  <h2>Missão 4: textos e teste do colega</h2>
+  <p>Na segunda metade, o colega recebe <b>só o endereço</b> do seu site. Você fica calado, observa e anota onde ele travou.</p>
+  <div class="mwrap" data-m="m4"></div>
+</section>
+
+<section id="quiz">
+  <span class="addr">/quiz · AULA 2</span>
+  <h2>O que você faria?</h2>
+  <div class="quiz" id="quizBox"></div>
+  <p class="score" id="quizScore"></p>
+  <p class="sync" id="syncQ"></p>
+</section>
+
+<section id="palco" class="mission">
+  <span class="addr">/palco · AULA 3</span>
+  <h2>Dia da apresentação</h2>
+  <p>O seu site é o seu palco. Você não precisa de slides: abra o endereço e conduza a turma pelo menu.</p>
+  <div class="mwrap" data-m="m5"></div>
+  <h3>Roteiro de 3 minutos</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Tempo</th><th>Na tela</th><th>O que eu digo</th></tr></thead>
+    <tbody>
+      <tr><td class="ref">0:00</td><td>Página inicial</td><td class="wrap">Quem eu sou e o que este site reúne.</td></tr>
+      <tr><td class="ref">0:20</td><td>Meus Trabalhos</td><td class="wrap">Dois ou três trabalhos: o que é, o que aprendi, o que foi difícil.</td></tr>
+      <tr><td class="ref">1:30</td><td>Um bloco que funciona</td><td class="wrap">Mostro o gráfico ou o formulário ao vivo.</td></tr>
+      <tr><td class="ref">2:15</td><td>Sobre Mim</td><td class="wrap">Uma escolha de design ou de texto, e por quê.</td></tr>
+      <tr><td class="ref">2:45</td><td>Página inicial</td><td class="wrap">O que ainda quero aprender. "Obrigado!", pausa, palmas.</td></tr>
+    </tbody></table></div>
+  <div class="card timerbox"><span class="lbl">Cronômetro de ensaio</span><b class="clock" id="clk">03:00</b><div class="row"><button class="btn on" type="button" id="tGo">Começar</button><button class="btn" type="button" id="tStop">Zerar</button></div><p class="hint" id="tMsg">Ensaie em voz alta. Se o tempo apertar, corte conteúdo: não fale mais rápido.</p></div>
+  <div class="note"><b>Se algo falhar:</b> "vou mostrar pelas capturas de tela e depois mostro ao vivo para quem quiser ver de perto". Diga a frase e siga.</div>
+  <details class="card prof"><summary>Para o professor</summary>
+    <p><b>Antes:</b> os endereços dos sites chegam na planilha da turma. Abra cada um em janela anônima na máquina do projetor e deixe as abas na ordem das apresentações.</p>
+    <p><b>Rubrica sugerida (10 pontos, 2 por item):</b> site abre sem conta e o menu funciona; reúne um trabalho de cada módulo cursado, com legenda; tudo aparece na janela anônima e não há dado pessoal; apresentou em três minutos mostrando o site; explicou uma escolha e disse onde a IA entrou.</p>
+  </details>
+</section>
+
+<footer>Instituto Lótus · Informática Avançada Kids · Módulo 7</footer>
+</main>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function semAcento(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim()}
+function ler(k,pad){try{var v=localStorage.getItem(k);return v===null?pad:JSON.parse(v)}catch(e){return pad}}
+function gravar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+// Endereço do Apps Script da turma (apps-script/backend.js). Vazio = o progresso fica só neste computador.
+var API='';
+var aluno=ler('m7-nome','');
+function enviar(dados,syncEl){
+  if(!aluno)return Promise.resolve(false);
+  if(!API){if(syncEl){syncEl.className='sync ok';syncEl.textContent='Salvo neste computador.'}return Promise.resolve(true)}
+  dados.nome=aluno;
+  if(syncEl){syncEl.className='sync';syncEl.textContent='Salvando no painel da turma…'}
+  // sem Content-Type para não disparar CORS
+  return fetch(API,{method:'POST',body:JSON.stringify(dados)}).then(function(r){return r.json()}).then(function(j){
+    if(!j.ok)throw new Error(j.erro||'erro');
+    if(syncEl){syncEl.className='sync ok';syncEl.textContent='Salvo no painel da turma.'}return true;
+  }).catch(function(){
+    if(syncEl){syncEl.className='sync err';syncEl.textContent='Não consegui salvar. Confira a internet e marque a caixinha de novo.'}return false;
+  });
+}
+function chips(box,list,atual,aoClicar){box.innerHTML='';
+  list.forEach(function(o){var b=document.createElement('button');b.type='button';b.className='btn'+(o[0]===atual?' on':'');b.textContent=o[1];
+    b.addEventListener('click',function(){aoClicar(o[0])});box.appendChild(b)})}
+
+// início: endereço sendo digitado
+var full='sites.google.com/view/meu-portfolio',t=0;
+function type(){$('typed').textContent=full.slice(0,t);if(t<full.length){t++;setTimeout(type,70)}}
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches){t=full.length}type();
+
+// 1 · rascunho x publicado
+var P={acc:'restrito',pub:null};
+function renderPub(){
+  var d=$('pTit').value.trim()||'(sem título)';
+  $('pDraft').textContent=d;
+  chips($('pAcc'),[['restrito','Restrito'],['link','Qualquer pessoa com o link']],P.acc,function(v){P.acc=v;renderPub()});
+  var live=$('pLive'),v=$('pV');live.className='ban';
+  if(!P.pub){live.className='ban none';live.textContent='Este endereço ainda não existe.';v.style.color='var(--bad)';v.textContent='Você nunca publicou. Para o mundo, o site não existe.'}
+  else if(P.pub.acc==='restrito'){live.className='ban lock';live.textContent='🔒 Você precisa de acesso';v.style.color='var(--bad)';v.textContent='Publicado como Restrito: só quem você convidou entra. Mude para "Qualquer pessoa com o link" e publique de novo.'}
+  else{live.textContent=P.pub.tit;
+    var igual=P.pub.tit===d&&P.pub.acc===P.acc;v.style.color=igual?'var(--live)':'var(--bad)';
+    v.textContent=igual?'No ar e atualizado. Qualquer pessoa com o endereço vê isto.':'O visitante ainda vê a versão antiga. Falta publicar de novo.'}
+  $('pSaved').textContent=P.pub&&P.pub.tit===d&&P.pub.acc===P.acc?'Publicado. Rascunho e site estão iguais.':'Rascunho salvo automaticamente. Ainda não publicado.';
+}
+$('pTit').addEventListener('input',renderPub);
+$('pPub').addEventListener('click',function(){P.pub={tit:$('pTit').value.trim()||'(sem título)',acc:P.acc};renderPub()});
+
+// 2 · cartões
+[].forEach.call(document.querySelectorAll('.flip'),function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+
+// missões
+var MIS={
+ m1:{nome:'Missão 1',fim:'site no ar!',rows:[
+  ['Criar o site','No Drive: Novo › Mais › Google Sites.'],
+  ['Dar os dois nomes','Nome do arquivo (lá em cima): Site_Portfolio_SeuNome. Nome do site: o seu primeiro nome.'],
+  ['Criar o menu de uma vez','Aba Páginas, botão +. Crie: Início, Meus Trabalhos, Sobre Mim e Contato.'],
+  ['Escrever o banner','O título do topo diz quem você é e o que a pessoa encontra aqui. Até seis palavras.'],
+  ['Seção de apresentação','Uma faixa com três a cinco linhas sobre você, escritas com as suas palavras.'],
+  ['Seção com imagem','Um avatar, um desenho ou um trabalho do curso, com legenda curta.'],
+  ['Publicar e conferir','Botão Publicar › qualquer pessoa com o link. Abra o endereço em outra máquina e cole aqui embaixo.']]},
+ m2:{nome:'Missão 2',fim:'site com identidade!',rows:[
+  ['Escrever o objetivo no papel','Uma linha: o que eu quero que o visitante faça na minha página inicial.'],
+  ['Escolher o tema','Painel Temas. Os prontos já combinam cor e fonte. Dois minutos.'],
+  ['Definir a cor de destaque','Uma cor que já existe na imagem do topo. Só em títulos e botões.'],
+  ['Arrumar a hierarquia','Aumente uma coisa e diminua duas. Use os estilos Título, Cabeçalho e Texto normal.'],
+  ['Criar um botão','Inserir › Botão, na página inicial, levando para Meus Trabalhos. Texto com verbo: "Ver meus trabalhos".'],
+  ['Publicar e ver no celular','Publique e use o ícone de visualização do editor para ver na tela pequena. Corrija o que ficar torto.']]},
+ m3:{nome:'Missão 3',fim:'portfólio completo!',rows:[
+  ['Listar no papel','Um trabalho de cada módulo (IA, documentos, apresentações, planilhas) e, ao lado, incorporar ou link.'],
+  ['Liberar os arquivos','Em cada um: Compartilhar › qualquer pessoa com o link › Leitor. Nunca Editor.'],
+  ['Incorporar a apresentação e o documento','Inserir › Apresentações ou Documentos. Documento longo vira link.'],
+  ['Incorporar o gráfico do painel','Só o gráfico do seu Painel Inteligente, nunca a aba com a base de dados.'],
+  ['Incorporar o formulário','Na página Contato. Veja o passo a passo logo abaixo.'],
+  ['Publicar e testar na anônima','Ctrl + Shift + N, cole o endereço e confira bloco por bloco. Escreva uma legenda em cada um.']]},
+ m4:{nome:'Missão 4',fim:'pronto para ensaiar!',rows:[
+  ['Reescrever o título do topo','Minha versão primeiro. Depois cinco variações da IA, e escolho uma com motivo.'],
+  ['Reescrever a chamada do botão','Uma frase com verbo. "Clique aqui" não vale.'],
+  ['Pôr o meu detalhe','Um número ou fato verdadeiro que só eu sei: quantos trabalhos, em quantos meses.'],
+  ['Declarar a autoria no rodapé','O que eu escrevi e onde a IA ajudou.'],
+  ['Testar o site de um colega','Só com o endereço, sem explicação. Digo onde travei e uma coisa que funcionou bem.'],
+  ['Corrigir o que impedia o uso','Site pedindo acesso, bloco que não aparece, texto que ninguém entendeu. E publicar de novo.']]},
+ m5:{nome:'Checklist',fim:'pronto para o palco!',rows:[
+  ['Publiquei depois da última mudança','Mesmo que nada tenha mudado, clique em Publicar por garantia.'],
+  ['O site abre na janela anônima','Sem pedir acesso, com todas as páginas do menu.'],
+  ['Todos os blocos aparecem','Apresentação, documento, gráfico e formulário, cada um com legenda.'],
+  ['Nenhum dado pessoal exposto','Nem meu, nem de colegas.'],
+  ['Conferi no celular','Título inteiro, texto legível, nada cortado.'],
+  ['Tenho o plano B','Capturas de tela de cada página, salvas em uma apresentação, para o caso de a internet cair.'],
+  ['Ensaiei duas vezes com o cronômetro','Em voz alta, dentro de três minutos.'],
+  ['Abas abertas antes de começar','E depois disso não mexo em mais nada.']]}
+};
+var feito=ler('m7-feito',{});
+function renderMis(id){
+  var m=MIS[id],box=document.querySelector('.mwrap[data-m="'+id+'"]'),ok=0,h='';
+  m.rows.forEach(function(r,i){var k=id+'-'+i,d=!!feito[k];if(d)ok++;
+    h+='<tr class="'+(d?'done':'')+'"><td><input type="checkbox" data-k="'+k+'"'+(d?' checked':'')+' aria-label="Marcar: '+esc(r[0])+'"></td><td class="ref">'+(i+1)+'</td><td class="what">'+esc(r[0])+'</td><td class="wrap">'+esc(r[1])+'</td></tr>'});
+  var tot=m.rows.length;
+  box.innerHTML='<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><div class="meter" style="flex:1"><i style="width:'+(ok/tot*100)+'%"></i></div><span class="score">'+ok+' de '+tot+(ok===tot?' · '+m.fim:'')+'</span></div>'+
+    '<div class="tablewrap"><table><thead><tr><th>Feito</th><th>Passo</th><th>O que fazer</th><th>Como</th></tr></thead><tbody>'+h+'</tbody></table></div><p class="sync" data-sync="'+id+'"></p>';
+  return ok;
+}
+function contar(id){var n=0;MIS[id].rows.forEach(function(r,i){if(feito[id+'-'+i])n++});return n}
+Object.keys(MIS).forEach(function(id){
+  renderMis(id);
+  document.querySelector('.mwrap[data-m="'+id+'"]').addEventListener('change',function(e){
+    var k=e.target.getAttribute('data-k');if(!k)return;
+    feito[k]=e.target.checked;gravar('m7-feito',feito);renderMis(id);
+    var d={};d[id]=contar(id);enviar(d,document.querySelector('[data-sync="'+id+'"]'));
+  });
+});
+function enviarTudo(){var d={};Object.keys(MIS).forEach(function(id){d[id]=contar(id)});var s=ler('m7-site','');if(s)d.site=s;enviar(d,null)}
+
+// endereço do site
+var site=ler('m7-site','');
+if(site){$('siteUrl').value=site;$('syncS').className='sync ok';$('syncS').textContent='Endereço salvo.'}
+$('siteSave').addEventListener('click',function(){
+  var v=$('siteUrl').value.trim(),s=$('syncS');
+  if(!/^https:\/\/sites\.google\.com\/[^\s]+$/.test(v)){s.className='sync err';s.textContent='O endereço precisa começar com https://sites.google.com/ . Copie da barra do navegador depois de publicar.';return}
+  if(/\/edit(\?|$)/.test(v)||/\/d\//.test(v)){s.className='sync err';s.textContent='Este é o endereço do editor. Clique em Publicar e copie o endereço do site publicado.';return}
+  gravar('m7-site',v);enviar({site:v},s);
+});
+
+// 4 · laboratório de design
+var LAB={cor:'c6',fonte:'f3',tam:'flat',con:'low'};
+var LOPT=[['cor','Cores',[['ok','Uma cor de destaque'],['c6','Seis cores']]],['fonte','Fontes',[['ok','Uma família'],['f3','Três fontes']]],['tam','Tamanhos',[['ok','Um grande, o resto menor'],['flat','Tudo do mesmo tamanho']]],['con','Contraste',[['ok','Texto escuro no claro'],['low','Cinza claro no branco']]]];
+function renderLab(){
+  var o=$('labOpts');o.innerHTML='';var bons=0,cls='lab';
+  LOPT.forEach(function(g){var l=document.createElement('span');l.className='lbl';l.textContent=g[1];o.appendChild(l);
+    var w=document.createElement('div');w.className='row';chips(w,g[2],LAB[g[0]],function(v){LAB[g[0]]=v;renderLab()});o.appendChild(w);
+    if(LAB[g[0]]==='ok')bons++;else cls+=' '+LAB[g[0]]});
+  $('lab').className=cls;
+  var r=$('labScore');r.textContent=bons+' de 4';r.className=bons===4?'':'err';
+  $('labMsg').textContent=bons===4?'Guia. Dá para saber por onde começar a ler, e parece feito por quem sabe o que está fazendo.':bons>=2?'Melhorando. Se tudo chama atenção, nada chama atenção.':'Confunde. O texto é o mesmo, mas você deixaria seu nome neste site?';
+}
+function palavras(s){s=s.trim();return s?s.split(/\s+/).length:0}
+function renderPhone(){var v=$('phTit').value.trim(),n=palavras(v);$('phBan').textContent=v||'(sem título)';
+  var e=$('phV');e.style.color=n&&n<=6?'var(--live)':'var(--bad)';
+  e.textContent=!n?'Digite um título.':n<=6?n+' palavra'+(n>1?'s':'')+'. Cabe bem na tela pequena.':n+' palavras. No celular o título cobre a tela inteira. Corte para seis ou menos.'}
+$('phTit').addEventListener('input',renderPhone);
+
+// 6 · permissão
+var PERM={doc:'restrito',slides:'restrito',graf:'restrito',form:'login'},permAberta=false;
+var PITENS=[['doc','Documento'],['slides','Apresentação'],['graf','Gráfico do painel'],['form','Formulário']];
+var POPT=[['restrito','Restrito'],['leitor','Com o link · Leitor'],['editor','Com o link · Editor']],FOPT=[['login','Exige login'],['livre','Aceita sem login']];
+function renderPermEd(){var ed=$('permEd');ed.innerHTML='<span class="lbl">Permissão de cada arquivo</span>';
+  PITENS.forEach(function(it){var d=document.createElement('div');d.className='perm';d.innerHTML='<b>'+it[1]+'</b>';
+    var w=document.createElement('div');w.className='row';chips(w,it[0]==='form'?FOPT:POPT,PERM[it[0]],function(v){PERM[it[0]]=v;renderPermEd();if(permAberta)renderPermView()});
+    d.appendChild(w);ed.appendChild(d)})}
+function renderPermView(){var h='',ok=0;
+  PITENS.forEach(function(it){var v=PERM[it[0]];
+    if(v==='restrito')h+='<div class="blk no">🔒 '+it[1]+': você precisa de acesso</div>';
+    else if(v==='login')h+='<div class="blk no">🔒 '+it[1]+': faça login para responder</div>';
+    else if(v==='editor')h+='<div class="blk risk">⚠ '+it[1]+': aparece, mas qualquer visitante pode apagar tudo</div>';
+    else{ok++;h+='<div class="blk ok">✓ '+it[1]+': aparece certinho</div>'}});
+  $('permView').innerHTML=h;var e=$('permV');e.style.color=ok===4?'var(--live)':'var(--bad)';
+  e.textContent=ok===4?'Os quatro blocos funcionam para quem não é você. É assim que o seu site precisa estar.':ok+' de 4 funcionando. Ajuste as permissões ao lado: a tela atualiza na hora.'}
+$('permGo').addEventListener('click',function(){permAberta=true;renderPermView()});
+
+// incorporar ou link
+var SORT=[['Formulário "Fale comigo"','inc','Incorporar. Cada clique a mais perde gente.'],['Documento de dez páginas','link','Link. Ninguém lê dez páginas dentro de um retângulo.'],['Gráfico do seu painel','inc','Incorporar. Ele atualiza sozinho e é o seu melhor argumento.'],['PDF para a pessoa baixar','link','Link. É algo que a pessoa leva embora.'],['Planilha com nomes e respostas das pessoas','nao','Nenhum dos dois. Dado pessoal não vai para site público. Mostre só o gráfico.']];
+var SOPT=[['inc','Incorporar'],['link','Link'],['nao','Nenhum dos dois']];
+function montarPerguntas(box,lista,opcoes,aoFim){var placar={};
+  lista.forEach(function(q,qi){var d=document.createElement('div');d.className='card q';
+    d.innerHTML='<b>'+(qi+1)+'. '+esc(q[0])+'</b><div class="opts"></div><div class="fb"></div>';
+    var o=d.querySelector('.opts'),fb=d.querySelector('.fb');
+    (opcoes||q[3]).forEach(function(op){var b=document.createElement('button');b.type='button';b.className='btn';b.textContent=op[1];
+      b.addEventListener('click',function(){
+        [].forEach.call(o.querySelectorAll('button'),function(x){x.classList.remove('right','wrong')});
+        var certo=op[0]===q[1];b.classList.add(certo?'right':'wrong');fb.style.color=certo?'var(--live)':'var(--bad)';
+        fb.textContent=certo?q[2]:'Ainda não. Leia de novo e pense em quem vai abrir o site.';
+        if(placar[qi]===undefined)placar[qi]=certo;
+        if(aoFim&&Object.keys(placar).length===lista.length)aoFim(Object.keys(placar).filter(function(k){return placar[k]}).length);
+      });o.appendChild(b)});
+    box.appendChild(d)})}
+montarPerguntas($('sortBox'),SORT,SOPT,null);
+
+// 8 · teste do título
+var VAZIAS=['incrivel','unico','inovador','melhor','top','legal','maravilhoso','perfeito','show'];
+var EXEMPLOS=['Bem-vindo ao meu site incrível','Meu site','Quatro projetos que eu construí em três meses'];
+function renderTit(){var v=$('tTit').value.trim(),k=semAcento(v),n=palavras(v),ws=k.split(/[^a-z0-9]+/);
+  var testes=[
+    [n>=3&&n<=8,'Tem entre três e oito palavras ('+n+')'],
+    [k.indexOf('bem-vindo')<0&&k.indexOf('bem vindo')<0&&k.indexOf('espero que')<0,'Não gasta espaço com "bem-vindo"'],
+    [!VAZIAS.some(function(a){return ws.indexOf(a)>-1}),'Sem adjetivo vazio (incrível, único, top…)'],
+    [k!=='meu site'&&k!=='meu portfolio'&&k!=='inicio'&&n>0,'Diz mais do que "Meu site"'],
+    [/\d|\b(um|dois|tres|quatro|cinco|seis|sete|oito|nove|dez)\b/.test(k),'Traz um número ou fato concreto']];
+  var ok=0;$('tChecks').innerHTML=testes.map(function(x){if(x[0])ok++;return '<li class="'+(x[0]?'ok':'no')+'">'+(x[0]?'✓ ':'✗ ')+x[1]+'</li>'}).join('');
+  var e=$('tV');e.style.color=ok===5?'var(--live)':'var(--bad)';
+  e.textContent=ok===5?'Serve. Só poderia estar no seu site.':'Ainda poderia estar no site de qualquer pessoa. Falta o detalhe que só você sabe.';}
+$('tTit').addEventListener('input',renderTit);
+chips($('tEx'),EXEMPLOS.map(function(x,i){return [i,'Exemplo '+(i+1)]}),-1,function(i){$('tTit').value=EXEMPLOS[i];renderTit()});
+
+// prompts
+var PR=[['Título do topo','Escreva cinco títulos para o topo de um site que reúne [o que o site tem]. Cada título com no máximo seis palavras, dizendo o que o visitante ganha ao ficar. Sem adjetivos como incrível, único ou inovador.'],
+ ['Texto de abertura','Escreva cinco versões do texto de abertura da página inicial de um site. O site reúne [o que o site tem]. Quem lê é alguém da comunidade que nunca ouviu falar do curso. Máximo de quarenta palavras por versão. Tom direto, sem adjetivos exagerados. Termine com uma chamada para ação com verbo. Marque com colchetes o que eu preciso conferir.'],
+ ['Encurtar pela metade','Reescreva o texto abaixo com metade das palavras, sem perder nenhuma informação concreta. Corte adjetivos.\n\n[cole aqui a versão escolhida]'],
+ ['Declaração de autoria (rodapé)','Os textos deste site foram escritos por [seu primeiro nome] com apoio de inteligência artificial para gerar variações de título e de chamada. A escolha, a revisão e os dados são meus.']];
+PR.forEach(function(p){var d=document.createElement('div');d.className='card pr';
+  d.innerHTML='<h3>'+esc(p[0])+'</h3><pre>'+esc(p[1])+'</pre><button type="button" class="copy">Copiar</button>';$('prompts').appendChild(d)});
+$('prompts').addEventListener('click',function(e){var b=e.target.closest('.copy');if(!b)return;var code=b.previousElementSibling;
+  var ok=function(){b.textContent='Copiado';b.classList.add('ok');setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok')},1500)};
+  var fb=function(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Ctrl+C'};
+  try{navigator.clipboard.writeText(code.textContent).then(ok,fb)}catch(err){fb()}});
+
+// 10 · quiz
+var Q=[
+ ['Mudei o título no editor, mas o colega continua vendo o antigo.','b','Isso. O Sites salva sozinho, mas só o Publicar põe no ar.',[['a','O site quebrou'],['b','Faltou clicar em Publicar'],['c','A internet dele caiu']]],
+ ['O colega abre o endereço do meu site e aparece "você precisa de acesso".','c','Isso. O site foi publicado como restrito.',[['a','Mandar o link de novo'],['b','Pedir a senha dele'],['c','Publicar › Gerenciar › qualquer pessoa com o link']]],
+ ['O gráfico aparece para mim, mas na janela anônima vira um retângulo pedindo acesso.','a','Isso. O site não empresta a sua permissão: o arquivo precisa estar liberado.',[['a','O arquivo incorporado está restrito'],['b','O gráfico é pesado demais'],['c','Falta trocar o tema']]],
+ ['Qual é a permissão certa para um arquivo incorporado no site?','b','Isso. Quem tem o endereço olha e não mexe.',[['a','Restrito'],['b','Qualquer pessoa com o link · Leitor'],['c','Qualquer pessoa com o link · Editor']]],
+ ['Qual título serve melhor para o topo do portfólio?','c','Isso. Diz o que a pessoa encontra e traz um número.',[['a','Bem-vindo ao meu site'],['b','O site mais incrível do mundo'],['c','Quatro projetos que eu construí']]],
+ ['O que NÃO pode aparecer em um site aberto?','a','Isso. Site aberto é aberto mesmo.',[['a','Endereço de casa e telefone'],['b','O gráfico do meu painel'],['c','Meu primeiro nome']]]];
+montarPerguntas($('quizBox'),Q,null,function(c){
+  $('quizScore').textContent='Acertou de primeira: '+c+' de '+Q.length+(c===Q.length?'. Mandou bem!':'');
+  gravar('m7-quiz',c);enviar({quiz:c},$('syncQ'))});
+
+// 11 · cronômetro
+var fim=0,iv=null;
+function mostra(seg){$('clk').textContent=('0'+Math.floor(seg/60)).slice(-2)+':'+('0'+seg%60).slice(-2)}
+function tique(){var r=Math.max(0,Math.round((fim-Date.now())/1000));mostra(r);
+  if(r===60)$('tMsg').textContent='Falta um minuto. Comece a fechar.';
+  if(r===0){clearInterval(iv);iv=null;$('clk').classList.add('end');$('tMsg').textContent='Tempo! Se faltou falar algo, corte conteúdo no próximo ensaio.'}}
+$('tGo').addEventListener('click',function(){clearInterval(iv);$('clk').classList.remove('end');$('tMsg').textContent='Valendo. Fale olhando para a turma.';fim=Date.now()+180000;tique();iv=setInterval(tique,500)});
+$('tStop').addEventListener('click',function(){clearInterval(iv);iv=null;$('clk').classList.remove('end');mostra(180);$('tMsg').textContent='Ensaie em voz alta. Se o tempo apertar, corte conteúdo: não fale mais rápido.'});
+
+// navegação
+var secs=[].slice.call(document.querySelectorAll('main section')),links=[].slice.call(document.querySelectorAll('#nav a'));
+function cur(){var y=scrollY+120,c=0;secs.forEach(function(s,i){if(s.offsetTop<=y)c=i});return c}
+function onScroll(){var c=cur();links.forEach(function(a,i){a.classList.toggle('on',i===c)});
+  var h=document.documentElement.scrollHeight-innerHeight;$('progress').style.width=(h>0?scrollY/h*100:0)+'%';
+  var on=links[c];if(on&&on.parentNode.scrollWidth>on.parentNode.clientWidth){on.parentNode.scrollLeft=on.offsetLeft-40}}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('keydown',function(e){if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  var c=cur();if(e.key==='ArrowRight'&&c<secs.length-1){e.preventDefault();secs[c+1].scrollIntoView()}
+  if(e.key==='ArrowLeft'&&c>0){e.preventDefault();secs[c-1].scrollIntoView()}});
+
+// nome do aluno
+function mostrarAluno(){$('me').hidden=!aluno;$('meNome').textContent=aluno;$('gate').hidden=!!aluno;if(!aluno)$('gateNome').focus()}
+$('gateForm').addEventListener('submit',function(e){e.preventDefault();
+  var nome=$('gateNome').value.replace(/\s+/g,' ').trim();
+  if(nome.length<2){$('gateErr').textContent='Digite seu nome para entrar.';return}
+  aluno=nome;gravar('m7-nome',aluno);$('gateErr').textContent='';mostrarAluno();enviarTudo()});
+$('meTrocar').addEventListener('click',function(){aluno='';try{localStorage.removeItem('m7-nome')}catch(err){}$('gateNome').value='';mostrarAluno()});
+
+renderPub();renderLab();renderPhone();renderPermEd();renderTit();onScroll();mostrarAluno();
+$('permView').innerHTML='<div class="blk">Clique em "Abrir em janela anônima" para ver.</div>';
+})();
+</script>
+</body>
+</html>

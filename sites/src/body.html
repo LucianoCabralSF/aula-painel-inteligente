@@ -1,0 +1,199 @@
+<div class="gate" id="gate" hidden>
+  <form class="card" id="gateForm" novalidate>
+    <span class="addr">MÓDULO 7 · MEU PORTFÓLIO NO AR</span>
+    <h2>Antes de começar, qual é o seu nome?</h2>
+    <p>Seu nome vai para o painel da turma. Assim o professor vê quem já fez cada missão e quem já tem o site no ar.</p>
+    <label class="lbl" for="gateNome">Seu primeiro nome</label>
+    <input id="gateNome" type="text" autocomplete="given-name" maxlength="60" placeholder="Ex.: Victória">
+    <button class="btn" type="submit" id="gateBtn">Entrar na aula</button>
+    <p class="err" id="gateErr"></p>
+  </form>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="fxlabel">Portfólio&nbsp;no&nbsp;Ar</span>
+    <nav id="nav">
+      <a href="#inicio">Início</a><a href="#publicar">1 Publicar</a><a href="#pecas">2 Peças</a><a href="#m1">3 Missão 1</a><a href="#design">4 Design</a><a href="#m2">5 Missão 2</a><a href="#permissao">6 Permissão</a><a href="#m3">7 Missão 3</a><a href="#textos">8 Textos</a><a href="#m4">9 Missão 4</a><a href="#quiz">10 Quiz</a><a href="#palco">11 Palco</a>
+    </nav>
+    <div class="me" id="me" hidden><span>Olá, <b id="meNome"></b></span><button type="button" id="meTrocar">trocar</button></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</div>
+
+<main>
+
+<section id="inicio" class="hero">
+  <span class="addr">/inicio · RETA FINAL DO CURSO</span>
+  <h1>Tudo o que você fez,<br>em um endereço só.</h1>
+  <p class="big">Seus trabalhos estão guardados no Drive, e só você vê. Nestas aulas você monta um <b>site</b> que reúne tudo e apresenta para a turma no dia do Projeto Integrador.</p>
+  <div class="formulabar" aria-label="Endereço do site"><span class="fx">https://</span><span class="typed"><span id="typed"></span><span class="caret"></span></span></div>
+  <div class="plan">
+    <div class="card"><span class="addr">AULA 1</span><h3>O site no ar</h3><p>Partes 1 a 5: criar, montar a página inicial, dar identidade visual e publicar.</p></div>
+    <div class="card"><span class="addr">AULA 2</span><h3>O site cheio e testado</h3><p>Partes 6 a 10: colocar os trabalhos dentro, testar como visitante, melhorar os textos.</p></div>
+    <div class="card"><span class="addr">AULA 3</span><h3>Apresentação</h3><p>Parte 11: conferir tudo e apresentar em 3 minutos.</p></div>
+  </div>
+  <div class="row"><a class="btn on" href="https://sites.google.com/new" target="_blank" rel="noopener">Abrir o Google Sites</a><a class="btn" href="https://drive.google.com" target="_blank" rel="noopener">Meu Drive</a></div>
+  <p class="hint">Use <kbd>→</kbd> ou <kbd>←</kbd> no teclado para passar de uma parte para outra.</p>
+</section>
+
+<section id="publicar">
+  <span class="addr">/publicar · AULA 1</span>
+  <h2>Mude o site e veja quem percebe</h2>
+  <p>Este é um editor de mentira, mas funciona igual ao Google Sites. Mude o título, escolha quem pode ver e observe as duas telas. Depois clique em <b>Publicar</b>.</p>
+  <div class="demo">
+    <div class="card editor">
+      <span class="lbl">Editor</span>
+      <label for="pTit">Título do topo</label>
+      <input class="txt" id="pTit" type="text" maxlength="60" value="Portfólio da Ana">
+      <span class="lbl">Quem pode ver</span>
+      <div class="row" id="pAcc"></div>
+      <button class="btn on" type="button" id="pPub">Publicar</button>
+      <p class="hint" id="pSaved">Rascunho salvo automaticamente.</p>
+    </div>
+    <div class="panels">
+      <div class="panel dead"><span class="tag">O que você vê no editor</span>
+        <div class="site"><div class="url">editor · rascunho</div><div class="ban" id="pDraft"></div></div>
+        <p class="verdict">Só você enxerga isto.</p></div>
+      <div class="panel alive"><span class="tag">O que o visitante vê</span>
+        <div class="site"><div class="url">sites.google.com/view/portfolio-da-ana</div><div class="ban" id="pLive"></div></div>
+        <p class="verdict" id="pV"></p></div>
+    </div>
+  </div>
+  <div class="note"><b>Publicado não é salvo.</b> O Sites salva sozinho o tempo todo, mas o mundo só vê a mudança depois que você clica em Publicar.</div>
+</section>
+
+<section id="pecas">
+  <span class="addr">/pecas · AULA 1</span>
+  <h2>As quatro peças de todo site</h2>
+  <p>Clique em cada cartão para ver a explicação.</p>
+  <div class="rules">
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>▤</b><span>O que é uma página?</span></div><div class="face back"><span>Um assunto, um item no menu. Para o seu portfólio bastam quatro: <b>Início, Meus Trabalhos, Sobre Mim e Contato</b>.</span><code>3 a 5 páginas</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>☰</b><span>O que é a navegação?</span></div><div class="face back"><span>O menu que liga as páginas. O nome de cada item <b>promete</b> o que a pessoa vai encontrar.</span><code>"Página 2" não diz nada</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>▬</b><span>O que é uma seção?</span></div><div class="face back"><span>Uma <b>faixa horizontal</b> dentro da página. O Sites monta em faixas: uma para o título, outra para o texto, outra para as imagens.</span><code>faixa, não caixa solta</code></div></div></button>
+    <button class="flip" type="button"><div class="in"><div class="face front"><b>◐</b><span>O que é o tema?</span></div><div class="face back"><span>As cores e fontes do <b>site inteiro</b>. Você escolhe uma vez e todas as páginas mudam juntas.</span><code>2 minutos para escolher</code></div></div></button>
+  </div>
+  <div class="warn"><b>Site aberto é aberto mesmo.</b> Não entra endereço de casa, telefone, nome completo de colega nem foto de outras pessoas sem autorização.</div>
+</section>
+
+<section id="m1" class="mission">
+  <span class="addr">/missao-1 · AULA 1</span>
+  <h2>Missão 1: o site no ar</h2>
+  <p>Agora é no <b>seu</b> Google Sites. Faça um passo, marque a caixinha e siga. A ordem importa: estrutura primeiro, conteúdo depois, visual por último.</p>
+  <div class="mwrap" data-m="m1"></div>
+  <div class="card linkbox">
+    <h3>Cole aqui o endereço do seu site publicado</h3>
+    <p>É o endereço que aparece depois de clicar em Publicar. Ele vai para a lista do professor e é o que você vai abrir no dia da apresentação.</p>
+    <div class="row"><input class="txt" id="siteUrl" type="url" placeholder="https://sites.google.com/view/..." aria-label="Endereço do meu site"><button class="btn on" type="button" id="siteSave">Salvar endereço</button></div>
+    <p class="sync" id="syncS"></p>
+  </div>
+</section>
+
+<section id="design">
+  <span class="addr">/design · AULA 1</span>
+  <h2>O mesmo texto, duas caras</h2>
+  <p>O texto desta página de mentira nunca muda. Mexa nas quatro escolhas e veja quando ela parece confiável.</p>
+  <div class="explorer card">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0" id="labOpts"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <div class="lab" id="lab"><div class="lab-ban">Portfólio da Ana</div><div class="lab-body"><b class="lab-h">Meus trabalhos</b><p class="lab-p">Aqui estão os projetos que construí no curso de informática: um painel, uma apresentação e um documento.</p><span class="lab-btn">Ver meus trabalhos</span></div></div>
+      <div class="result"><span class="lbl">Resultado</span><b id="labScore"></b></div>
+      <p class="hint" id="labMsg"></p>
+    </div>
+  </div>
+  <h3>O teste do celular</h3>
+  <p>Quase todo mundo vai abrir o seu site no celular. Digite o título do seu topo e veja se ele cabe.</p>
+  <div class="demo">
+    <div class="card editor"><label for="phTit">Título do topo do meu site</label><input class="txt" id="phTit" type="text" maxlength="90" value="Bem-vindo ao meu site de trabalhos do curso de informática"><p class="verdict" id="phV"></p></div>
+    <div class="phone"><div class="site"><div class="url">no celular</div><div class="ban" id="phBan"></div><div class="lab-body"><p class="lab-p" style="color:var(--muted)">O resto da página fica aqui embaixo.</p></div></div></div>
+  </div>
+</section>
+
+<section id="m2" class="mission">
+  <span class="addr">/missao-2 · AULA 1</span>
+  <h2>Missão 2: cara de site</h2>
+  <p>Cada decisão visual tem prazo de <b>dois minutos</b>. Escolheu, segue. Dá para trocar depois.</p>
+  <div class="mwrap" data-m="m2"></div>
+  <div class="note"><b>Sobrou tempo?</b> Insira um vídeo (Inserir › YouTube) ou um mapa de um lugar público (Inserir › Mapa), cada um em sua seção e com legenda. Nunca o endereço da sua casa.</div>
+</section>
+
+<section id="permissao">
+  <span class="addr">/permissao · AULA 2</span>
+  <h2>O que você vê não é o que o mundo vê</h2>
+  <p>Você incorporou quatro coisas no site. No seu computador tudo aparece, porque você está logado. Ajuste a permissão de cada arquivo e abra a <b>janela anônima</b> para ver como o visitante enxerga.</p>
+  <div class="demo">
+    <div class="card editor" id="permEd"></div>
+    <div class="panels">
+      <div class="panel alive"><span class="tag">Janela anônima · o visitante</span><div id="permView" class="blocks"></div><p class="verdict" id="permV"></p></div>
+      <button class="btn on" type="button" id="permGo">Abrir em janela anônima</button>
+      <p class="hint">No Chrome de verdade: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd>.</p>
+    </div>
+  </div>
+  <div class="warn"><b>Dado pessoal:</b> nunca incorpore uma planilha com nomes ou respostas de pessoas. Incorpore só o <b>gráfico</b> ou o painel.</div>
+  <h3>Incorporar ou colocar link?</h3>
+  <p>Incorpore o que a pessoa precisa ver ou usar na hora. Ponha link no que ela vai levar embora.</p>
+  <div class="quiz" id="sortBox"></div>
+</section>
+
+<section id="m3" class="mission">
+  <span class="addr">/missao-3 · AULA 2</span>
+  <h2>Missão 3: os trabalhos dentro do site</h2>
+  <p>Ordem que não muda: <b>liberar antes de incorporar</b>. Na página Meus Trabalhos, faça uma seção para cada módulo do curso.</p>
+  <div class="mwrap" data-m="m3"></div>
+  <div class="card"><h3>Formulário "Fale comigo" em 5 minutos</h3>
+    <ol class="steps"><li>Abra <a href="https://forms.new" target="_blank" rel="noopener">forms.new</a> e dê o título "O que você achou do meu portfólio?".</li><li>Crie três perguntas: uma de múltipla escolha, uma de escala de 1 a 5 e uma de resposta curta. Não peça nome completo nem telefone.</li><li>Em Configurações › Respostas, desligue a exigência de login.</li><li>No site: Inserir › Formulários, escolha o seu e aumente a altura até o botão Enviar aparecer.</li></ol></div>
+</section>
+
+<section id="textos">
+  <span class="addr">/textos · AULA 2</span>
+  <h2>Texto que enrola e texto que serve</h2>
+  <p>Quem chega ao seu site não sabe quem você é. Digite o título do seu topo e veja o que o teste diz.</p>
+  <div class="demo">
+    <div class="card editor"><label for="tTit">Meu título</label><input class="txt" id="tTit" type="text" maxlength="90" value="Bem-vindo ao meu site incrível"><div class="row" id="tEx"></div></div>
+    <div class="card"><span class="lbl">O teste do título</span><ul class="checks" id="tChecks"></ul><p class="verdict" id="tV"></p></div>
+  </div>
+  <h3>A máquina propõe, você assina</h3>
+  <p>Escreva a sua versão primeiro. Depois peça <b>cinco</b> variações para a IA, escolha uma com motivo e ponha um detalhe que só você sabe. Nunca coloque nome completo, endereço ou telefone no comando.</p>
+  <div class="quiz" id="prompts"></div>
+</section>
+
+<section id="m4" class="mission">
+  <span class="addr">/missao-4 · AULA 2</span>
+  <h2>Missão 4: textos e teste do colega</h2>
+  <p>Na segunda metade, o colega recebe <b>só o endereço</b> do seu site. Você fica calado, observa e anota onde ele travou.</p>
+  <div class="mwrap" data-m="m4"></div>
+</section>
+
+<section id="quiz">
+  <span class="addr">/quiz · AULA 2</span>
+  <h2>O que você faria?</h2>
+  <div class="quiz" id="quizBox"></div>
+  <p class="score" id="quizScore"></p>
+  <p class="sync" id="syncQ"></p>
+</section>
+
+<section id="palco" class="mission">
+  <span class="addr">/palco · AULA 3</span>
+  <h2>Dia da apresentação</h2>
+  <p>O seu site é o seu palco. Você não precisa de slides: abra o endereço e conduza a turma pelo menu.</p>
+  <div class="mwrap" data-m="m5"></div>
+  <h3>Roteiro de 3 minutos</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Tempo</th><th>Na tela</th><th>O que eu digo</th></tr></thead>
+    <tbody>
+      <tr><td class="ref">0:00</td><td>Página inicial</td><td class="wrap">Quem eu sou e o que este site reúne.</td></tr>
+      <tr><td class="ref">0:20</td><td>Meus Trabalhos</td><td class="wrap">Dois ou três trabalhos: o que é, o que aprendi, o que foi difícil.</td></tr>
+      <tr><td class="ref">1:30</td><td>Um bloco que funciona</td><td class="wrap">Mostro o gráfico ou o formulário ao vivo.</td></tr>
+      <tr><td class="ref">2:15</td><td>Sobre Mim</td><td class="wrap">Uma escolha de design ou de texto, e por quê.</td></tr>
+      <tr><td class="ref">2:45</td><td>Página inicial</td><td class="wrap">O que ainda quero aprender. "Obrigado!", pausa, palmas.</td></tr>
+    </tbody></table></div>
+  <div class="card timerbox"><span class="lbl">Cronômetro de ensaio</span><b class="clock" id="clk">03:00</b><div class="row"><button class="btn on" type="button" id="tGo">Começar</button><button class="btn" type="button" id="tStop">Zerar</button></div><p class="hint" id="tMsg">Ensaie em voz alta. Se o tempo apertar, corte conteúdo: não fale mais rápido.</p></div>
+  <div class="note"><b>Se algo falhar:</b> "vou mostrar pelas capturas de tela e depois mostro ao vivo para quem quiser ver de perto". Diga a frase e siga.</div>
+  <details class="card prof"><summary>Para o professor</summary>
+    <p><b>Antes:</b> os endereços dos sites chegam na planilha da turma. Abra cada um em janela anônima na máquina do projetor e deixe as abas na ordem das apresentações.</p>
+    <p><b>Rubrica sugerida (10 pontos, 2 por item):</b> site abre sem conta e o menu funciona; reúne um trabalho de cada módulo cursado, com legenda; tudo aparece na janela anônima e não há dado pessoal; apresentou em três minutos mostrando o site; explicou uma escolha e disse onde a IA entrou.</p>
+  </details>
+</section>
+
+<footer>Instituto Lótus · Informática Avançada Kids · Módulo 7</footer>
+</main>
