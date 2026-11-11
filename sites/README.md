@@ -14,7 +14,7 @@ Sem este passo o site funciona, mas o progresso fica só no computador de cada a
 1. Na planilha da turma: Extensões › Apps Script. Cole `apps-script/backend.js` e, em Configurações do projeto, mostre e substitua o `appsscript.json`.
 2. Rode a função `autorizar` uma vez.
 3. Implantar › Nova implantação › App da Web, executando como você, com acesso para qualquer pessoa.
-4. Copie o endereço que termina em `/exec` e cole em `var API=''` no `index.html`.
+4. Copie o endereço que termina em `/exec` e cole em `var API` no `index.html` (já está ligado à planilha "Portfolio no Ar").
 
 Aviso: a API é pública e grava apenas o primeiro nome do aluno, o progresso da aula e o endereço do site publicado.
 

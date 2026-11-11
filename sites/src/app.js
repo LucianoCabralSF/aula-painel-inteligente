@@ -6,7 +6,7 @@ function ler(k,pad){try{var v=localStorage.getItem(k);return v===null?pad:JSON.p
 function gravar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
 // Endereço do Apps Script da turma (apps-script/backend.js). Vazio = o progresso fica só neste computador.
-var API='';
+var API='https://script.google.com/macros/s/AKfycbwXcbyNSYDksrbxwIU9B9M6tq2_MyGyId2aTGfiOJsy4qP4T3uGaWilmSSc53hQk_B06g/exec';
 var aluno=ler('m7-nome','');
 function enviar(dados,syncEl){
   if(!aluno)return Promise.resolve(false);
